@@ -1,0 +1,182 @@
+#!/bin/sh
+#
+# SSHlog v1.2.1 (for Netgear ReadyNAS devices)
+#
+# Parses/filters system auth-logs for SSH access requests.
+#
+# Cats, greps and echoes accepted/failed ssh logins,
+# and conditionally, sftp requests from
+# '/var/log/auth*' log files.
+#
+# @author Kim Olsen <kim@pizslacker.org>
+#
+# v0.9.x   - @lastchange 20120730-22:20-GMT+1
+#
+# v1.x     - @lastchange 20120807-05:11-GMT+1
+#
+# v1.0.x   - @lastchange 20120814-01:11-GMT+1
+#
+# v1.1.x   - @lastchange 20120814-23:29-GMT+1
+#
+# v1.2.x   - @lastchange 20121121-12:03-GMT+1
+
+MDATE="20130822-13:26-GMT+1"
+LCHANGE=$MDATE
+VER=1.2.1
+
+# SSHlog parser-function.
+# Called by command arg '$2' or '$3' case(s), located at end of script.
+sshlog_parser () {
+    # Output filtered sshlog results into data-file.
+    cat "$AUTH_LOG" | grep "$KEYWORD" > /tmp/sshlog.dat && \
+    echo >> /tmp/sshlog.dat;
+    # Count number of logins (lines from auth-log output).
+    # Assign type of count according to '$KEYWORD'.
+    if [ "$KEYWORD" = "Accepted" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> /tmp/sshlog.dat;
+    elif [ "$KEYWORD" = "Failed" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> /tmp/sshlog.dat;
+    elif [ "$KEYWORD" = "Accepted publickey" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> /tmp/sshlog.dat;
+    elif [ "$KEYWORD" = "Accepted password" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> /tmp/sshlog.dat;
+    elif [ "$KEYWORD" = "Failed publickey" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> /tmp/sshlog.dat;
+    elif [ "$KEYWORD" = "Failed password" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> /tmp/sshlog.dat;
+    fi
+    echo >> /tmp/sshlog.dat;
+    # Append retreived SFTP request(s), if 'KEYWORD' is not 'Failed'.
+    if [ "$SFTP" = "true" ]; then
+        SFTP_CNT=$(cat "$AUTH_LOG" | grep "sftp" | wc -l)
+        if [ "$SFTP_CNT" != "0" ]; then
+            cat "$AUTH_LOG" | grep 'sftp' >> /tmp/sshlog.dat;
+            echo >> /tmp/sshlog.dat;
+            # Count number of sftp-requests (lines from auth-log output).
+            echo $SFTP_CNT" SFTP request(s) "$EXT_MSG >> /tmp/sshlog.dat;
+            echo >> /tmp/sshlog.dat;
+        fi
+    fi
+    # Output compiled sshlog access results and
+    # make a clean exit(0).
+    echo;
+    echo "SSHlog v"$VER;
+    echo;
+    cat /tmp/sshlog.dat;
+    rm -f /tmp/sshlog.dat 2>&1;
+    # Output number of hosts in 'hosts.deny' if DenyHosts is installed.
+    if [ "$KEYWORD" = "Failed"  ]; then
+        if [ -x $(which denyhosts) ]; then
+            echo "$(($(cat /etc/hosts.deny | wc -l)-20)) host(s) added to '/etc/hosts.deny' by DenyHosts.";
+            echo;
+        fi
+    fi
+    exit 0;
+}
+
+# Force-set 'AUTH_LOG', if unset.
+if [ ! $AUTH_LOG ]; then
+    AUTH_LOG=/var/log/auth.log;
+fi
+
+# First case scenarios for command arg '$1'.
+case "$1" in
+        ok)
+            KEYWORD='Accepted'
+            MSG="accepted login(s) "
+            EXT_MSG="the last 8 months"
+            ;;
+
+        fail)
+            KEYWORD='Failed'
+            MSG="failed login attempt(s) "
+            EXT_MSG="the last 8 months"
+            ;;
+
+        -v)
+            # Output detailed application version, and
+            # make an unclean exit(1).
+            echo
+            echo "SSHlog v"$VER "(rev-"$MDATE")"
+            echo "by Kim Olsen <pizslacker@pizslacker.org>"
+            echo
+            echo "You need root-privileges to execute this script."
+            echo
+            exit 1
+            ;;
+
+        *)
+            # Output application version, basic helptext and
+            # make an unclean exit(1).
+            echo
+            echo "SSHlog v"$VER
+            echo
+            echo "Usage: sshlog [ok|fail|-v] [key|pass|sftp]"
+            echo
+            echo "Switches:"
+            echo "ok        - display accepted login(s)."
+            echo "fail      - display failed login attempt(s)."
+            echo "-v        - display detailed version-info."
+            echo
+            echo "Arguments:"
+            echo "key       - filter logins by publickey authentication."
+            echo "pass      - filter logins by password authentication."
+            echo "sftp      - display SFTP request(s)."
+            echo
+            exit 1
+esac
+
+# Second case scenarios for command arg '$2'.
+case "$2" in
+        key)
+            unset KEYWORD
+            if [ "$1" = "ok" ]; then
+                KEYWORD='Accepted publickey'
+                MSG="accepted publickey login(s) "
+                EXT_MSG="the last 8 months"
+            elif [ "$1" = "fail" ]; then
+                KEYWORD='Failed publickey'
+                MSG="failed publickey login attempt(s) "
+                EXT_MSG="the last 8 months"
+            fi
+            ;;
+
+        pass)
+            unset KEYWORD
+            if [ "$1" = "ok" ]; then
+                KEYWORD='Accepted password'
+                MSG="accepted password login(s) "
+                EXT_MSG="the last 8 months"
+            elif [ "$1" = "fail" ]; then
+                KEYWORD='Failed password'
+                MSG="failed password login attempt(s) "
+                EXT_MSG="the last 8 months"
+            fi
+            ;;
+
+        sftp)
+            SFTP="true"
+            ;;
+
+        *)
+            sshlog_parser
+            ;;
+esac
+
+# Last case scenarios for command arg '$3'.
+case "$3" in
+        sftp)
+            SFTP="true"
+            sshlog_parser
+            ;;
+
+        *)
+            sshlog_parser
+            ;;
+esac
