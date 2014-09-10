@@ -11,4 +11,4 @@ Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, l
 
 I've modified the base-script to run on: Debian GNU/Linux, Netgear RAIDiator (ReadyNAS), Ubuntu Server / Desktop and Linux Mint.
 
-If you get a mod of your own to run on a specific distribution, please, feel free to mail a copy to me and I'll add it to the repo (and give appropriate accredidation on the website, of course).
+If you get a mod of your own to run on a specific distribution, please, feel free to mail a copy to me and I'll add it to the repo (and give appropriate accredidation on the website, of course)
