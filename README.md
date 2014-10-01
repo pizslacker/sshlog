@@ -9,14 +9,10 @@ Allthough originally written for server-use, it has proven to be quite a useful 
 
 Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, laptops, VPS', workstations, routers, etc.) to provide simple, text-based log-access throughout my network-infrastructure. Giving me complete access-history at my fingertips, wherever, whenever.
 
-I've modified the base-script to run on: Debian GNU/Linux, Netgear RAIDiator (ReadyNAS), Ubuntu Server / Desktop and Linux Mint.
-
-If you get a mod of your own to run on a specific distribution, please, feel free to mail a copy to me and I'll add it to the repo (and give appropriate accredidation on the website, of course)
-
 what does sshlog do?
 ======
 sshlog generates a log of SSH connections made to a Linux system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory. It can filter log-results based on accepted/failed login(s), or by authentication-method(s) used by the remote connection (password / publickey / PAM).
 
-compatibility
-======
-The main version works on Ubuntu or Ubuntu-based Linux distributions (like Linux Mint, etc), and there are forks for Debian GNU/Linux and Debian-based ReadyNAS devices.
+Compatibility
+=============
+This version runs on Debian GNU/Linux (all versions).
