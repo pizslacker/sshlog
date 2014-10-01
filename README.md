@@ -9,7 +9,9 @@ Allthough originally written for server-use, it has proven to be quite a useful 
 
 Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, laptops, VPS', workstations, routers, etc.) to provide simple, text-based log-access throughout my network-infrastructure. Giving me complete access-history at my fingertips, wherever, whenever.
 
-I've modified the base-script to run on: Debian GNU/Linux, Netgear RAIDiator (ReadyNAS), Ubuntu Server / Desktop and Linux Mint.
+I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu Desktop and Linux Mint).
+
+There are also branches for: Debian GNU/Linux and Netgear RAIDiator (ReadyNAS),
 
 If you get a mod of your own to run on a specific distribution, please, feel free to mail a copy to me and I'll add it to the repo (and give appropriate accredidation on the website, of course)
 
