@@ -1,0 +1,361 @@
+#!/bin/sh
+#
+# SSHlog v1.6
+#
+# Parses/filters system auth-logs for SSH access requests.
+#
+# Cats, greps and echoes accepted/failed ssh logins,
+# and conditionally, sftp requests from
+# '/var/log/auth*' log files.
+#
+# @author Kim Olsen <pizslacker@pizslacker.org>
+#
+# v0.9.x   - @lastchange 20120730-22:20-GMT+1
+#
+# v1.0.x   - @lastchange 20120814-01:11-GMT+1
+#
+# v1.2.x   - @lastchange 20120916-02:09-GMT+1
+#
+# v1.3.x   - @lastchange 20121008-10:04-GMT+1
+#
+# v1.4.x   - @lastchange 20130224-10:03-GMT+1
+#
+# v1.5.x   - @lastchange 20130226-18:01-GMT+1
+#
+MDATE="20130731-10:59-GMT+1"
+LCHANGE=$MDATE
+VER=1.6
+REV=11
+# Temporary data-file.
+SSHLOGFILE="/tmp/$(basename $0).$$.dat"
+# ssh-logs directory.
+SSHLOGDIR="ssh-logs"
+
+# UID=0 run-time condition check.
+if [ $(id -u) -eq 0 ]; then
+
+# SSHlog parser-function.
+# Called by command arg '$2' or '$3' case(s), located at end of script.
+sshlog_parser () {
+    echo "SSHlog v$VER" > "$SSHLOGFILE";
+    echo >> "$SSHLOGFILE";
+    # Output filtered sshlog results into data-file.
+    cat "$AUTH_LOG" | grep ' sshd\[' | grep "$KEYWORD" >> "$SSHLOGFILE" && echo >> "$SSHLOGFILE";
+    # Count number of logins (lines from auth-log output).
+    # Assign type of count according to '$KEYWORD'.
+    if [ "$KEYWORD" = "Accepted" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> "$SSHLOGFILE";
+    elif [ "$KEYWORD" = "Failed" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> "$SSHLOGFILE";
+    elif [ "$KEYWORD" = "Accepted publickey" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> "$SSHLOGFILE";
+    elif [ "$KEYWORD" = "Accepted password" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> "$SSHLOGFILE";
+    elif [ "$KEYWORD" = "Failed publickey" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> "$SSHLOGFILE";
+    elif [ "$KEYWORD" = "Failed password" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> "$SSHLOGFILE";
+    elif [ "$KEYWORD" = "Accepted keyboard-interactive/pam" ]; then
+        echo $(cat "$AUTH_LOG" | grep "$KEYWORD" | wc -l)\
+        $MSG $EXT_MSG >> "$SSHLOGFILE";
+    fi
+    echo >> "$SSHLOGFILE";
+    # Append retreived SFTP request(s), if 'KEYWORD' is not 'Failed'.
+    if [ "$SFTP" != "" ]; then
+        SFTP_CNT=$(cat "$AUTH_LOG" | grep "sftp" | wc -l)
+        if [ "$SFTP_CNT" != "0" ]; then
+            cat "$AUTH_LOG" | grep 'subsystem request for sftp' >> "$SSHLOGFILE";
+            echo >> "$SSHLOGFILE";
+            # Count number of sftp-requests (lines from auth-log output).
+            echo $SFTP_CNT" SFTP request(s) "$EXT_MSG >> "$SSHLOGFILE";
+            echo >> "$SSHLOGFILE";
+        fi
+    fi
+    # Output number of hosts in 'hosts.deny' if DenyHosts is installed.
+    if [ "$KEYWORD" = "Failed password"  ]; then
+        if [ -x $(which denyhosts) ]; then
+            echo "$(($(cat /etc/hosts.deny | wc -l)-20)) host IP-address(es) added to '/etc/hosts.deny' by DenyHosts." >> "$SSHLOGFILE";
+            echo >> "$SSHLOGFILE";
+        fi
+    fi
+    # If '-t' option is given, pipe results to textfile in user home dir.
+    # If 'SSHLOGDIR' does not exist, create it. Then pipe results into
+    # named textfile in '~/$SSHLOGDIR'.
+    if [ "$TEXT" != "" ]; then
+        if [ ! -d ~/"$SSHLOGDIR" ]; then
+            {
+            mkdir ~/"$SSHLOGDIR";
+            if [ "$KEYWORD" = "Accepted" ]; then
+                {
+                cat "$SSHLOGFILE" > /tmp/sshlog-accepted-$(date +%Y%m%d).log;
+                mv /tmp/sshlog-accepted-$(date +%Y%m%d).log ~/ssh-logs/;
+                sudo chown $USER:$USER ~/ssh-logs/sshlog-accepted-$(date +%Y%m%d).log;
+                exit 0;
+                }
+            elif [ "$KEYWORD" = "Failed password" ]; then
+                {
+                cat "$SSHLOGFILE" > /tmp/sshlog-failed-$(date +%Y%m%d).log;
+                mv /tmp/sshlog-failed-$(date +%Y%m%d).log ~/ssh-logs/;
+                sudo chown $USER:$USER ~/ssh-logs/sshlog-failed-$(date +%Y%m%d).log;
+                exit 0;
+                }
+            fi
+            }
+        else
+            {
+            if [ "$KEYWORD" = "Accepted" ]; then
+                {
+                cat "$SSHLOGFILE" > /tmp/sshlog-accepted-$(date +%Y%m%d).log;
+                mv /tmp/sshlog-accepted-$(date +%Y%m%d).log ~/ssh-logs/;
+                sudo chown $USER:$USER ~/ssh-logs/sshlog-accepted-$(date +%Y%m%d).log;
+                exit 0;
+                }
+            elif [ "$KEYWORD" = "Failed password" ]; then
+                {
+                cat "$SSHLOGFILE" > /tmp/sshlog-failed-$(date +%Y%m%d).log;
+                mv /tmp/sshlog-failed-$(date +%Y%m%d).log ~/ssh-logs/;
+                sudo chown $USER:$USER ~/ssh-logs/sshlog-failed-$(date +%Y%m%d).log;
+                exit 0;
+                }
+            fi
+            }
+        fi
+    fi
+    # Use 'sshlog-viewer', if 'dialog' is installed.
+    # Else, sshlog-viewer will revert to using 'less'.
+    #
+    if [ -x dialog ]; then
+        if [ -x sshlogviewer ]; then
+            sshlogviewer "$SSHLOGFILE";
+        fi
+    else
+        less "$SSHLOGFILE";
+    fi
+    rm -f "$SSHLOGFILE" 2>&1 && exit 0 || exit 1;
+}
+
+# Force-set 'AUTH_LOG', if unset.
+if [ ! $AUTH_LOG ]; then
+    AUTH_LOG=/var/log/auth.log;
+fi
+
+# First case scenarios for command arg '$1'.
+case "$1" in
+        -a)
+            KEYWORD='Accepted'
+            MSG="accepted login(s) "
+            EXT_MSG="this week"
+            ;;
+
+        -f)
+            KEYWORD='Failed password'
+            MSG="failed login attempt(s) "
+            EXT_MSG="this week"
+            ;;
+
+        -v)
+            # Output detailed application version, and
+            # make an unclean exit(1).
+            echo
+            echo "SSHlog v"$VER
+            echo "(revision "$REV" "$LCHANGE")"
+            echo "by Kim Olsen <pizslacker@pizslacker.org>"
+            echo
+            echo "You need root/sudo to execute sshlog properly."
+            echo
+            exit 1
+            ;;
+
+        *)
+            # Output application version, basic helptext and
+            # make an unclean exit(1).
+            echo
+            echo "SSHlog v"$VER
+            echo
+            echo "Usage: sshlog [-a|-f|-v] [-t] [key|pass] [sftp] [old]"
+            echo
+            echo "Options:"
+            echo "-a        - display accepted login(s)."
+            echo "-f        - display failed login attempt(s)."
+            echo "-v        - display detailed version-info."
+            echo "-t        - pipe results to textfile in 'ssh-logs' dir."
+            echo
+            echo "Filter-arguments:"
+            echo "key       - filter logins by publickey authentication."
+            echo "pam       - filter logins by PAM authentication."
+            echo "pass      - filter logins by password authentication."
+            echo
+            echo "Supplemental arguments:"
+            echo "sftp      - display SFTP request(s)."
+            echo "old       - display results from 7 days ago."
+            echo
+            echo "Use 'PgUp' and 'PgDn' keys to navigate results."
+            echo
+            echo "You must supply an option to execute sshlog."
+            echo
+            exit 1
+            ;;
+esac
+
+# Second case scenarios for command arg '$2'.
+case "$2" in
+        -t)
+            TEXT=true;
+            ;;
+        old)
+            AUTH_LOG='/var/log/auth.log.1'
+            EXT_MSG="last week"
+            ;;
+
+        key)
+            unset KEYWORD
+            if [ "$1" = "-a" ]; then
+                KEYWORD='Accepted publickey'
+                MSG="accepted publickey login(s) "
+                EXT_MSG="this week"
+            elif [ "$1" = "-f" ]; then
+                KEYWORD='Failed publickey'
+                MSG="failed publickey login attempt(s) "
+                EXT_MSG="this week"
+            fi
+            ;;
+
+        pam)
+            unset KEYWORD
+            KEYWORD="Accepted keyboard-interactive/pam"
+            MSG="accepted pam-login(s) "
+            EXT_MSG="this week"
+            ;;
+
+        pass)
+            unset KEYWORD
+            if [ "$1" = "-a" ]; then
+                KEYWORD='Accepted password'
+                MSG="accepted password login(s) "
+                EXT_MSG="this week"
+            elif [ "$1" = "-f" ]; then
+                KEYWORD='Failed password'
+                MSG="failed password login attempt(s) "
+                EXT_MSG="this week"
+            fi
+            ;;
+
+        pub)
+            unset KEYWORD
+            if [ "$1" = "-a" ]; then
+                KEYWORD='Accepted publickey'
+                MSG="accepted publickey login(s) "
+                EXT_MSG="this week"
+            elif [ "$1" = "-f" ]; then
+                KEYWORD='Failed publickey'
+                MSG="failed publickey login attempt(s) "
+                EXT_MSG="this week"
+            fi
+            ;;
+
+        pubkey)
+            unset KEYWORD
+            if [ "$1" = "-a" ]; then
+                KEYWORD='Accepted publickey'
+                MSG="accepted publickey login(s) "
+                EXT_MSG="this week"
+            elif [ "$1" = "-f" ]; then
+                KEYWORD='Failed publickey'
+                MSG="failed publickey login attempt(s) "
+                EXT_MSG="this week"
+            fi
+            ;;
+
+        sftp)
+            SFTP=1
+            ;;
+
+        *)
+            sshlog_parser
+            ;;
+esac
+
+# Last case scenarios for command arg '$3'.
+case "$3" in
+        -t)
+            TEXT=1;
+            ;;
+
+        key)
+            unset KEYWORD
+            if [ "$1" = "-a" ]; then
+                KEYWORD='Accepted publickey'
+                MSG="accepted publickey login(s) "
+                EXT_MSG="this week"
+            elif [ "$1" = "-f" ]; then
+                KEYWORD='Failed publickey'
+                MSG="failed publickey login attempt(s) "
+                EXT_MSG="this week"
+            fi
+            sshlog_parser
+            ;;
+
+        pass)
+            unset KEYWORD
+            if [ "$1" = "-a" ]; then
+                KEYWORD='Accepted password'
+                MSG="accepted password login(s) "
+                EXT_MSG="this week"
+            elif [ "$1" = "-f" ]; then
+                KEYWORD='Failed password'
+                MSG="failed password login attempt(s) "
+                EXT_MSG="this week"
+            fi
+            sshlog_parser
+            ;;
+
+        pubkey)
+            unset KEYWORD
+            if [ "$1" = "-a" ]; then
+                KEYWORD='Accepted publickey'
+                MSG="accepted publickey login(s) "
+                EXT_MSG="this week"
+            elif [ "$1" = "-f" ]; then
+                KEYWORD='Failed publickey'
+                MSG="failed publickey login attempt(s) "
+                EXT_MSG="this week"
+            fi
+            sshlog_parser
+            ;;
+
+        old)
+            AUTH_LOG='/var/log/auth.log.1'
+            EXT_MSG="last week"
+            sshlog_parser
+            ;;
+
+        sftp)
+            SFTP="true"
+            sshlog_parser
+            ;;
+
+        pam)
+            unset KEYWORD
+            KEYWORD="Accepted keyboard-interactive/pam"
+            MSG="accepted pam-login(s) "
+            EXT_MSG="this week"
+            sshlog_parser
+            ;;
+
+        *)
+            sshlog_parser
+            ;;
+esac
+
+else
+    echo;
+    echo "You need root/sudo to execute sshlog properly!";
+    echo;
+    exit 1;
+fi
