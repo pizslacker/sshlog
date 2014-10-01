@@ -18,7 +18,3 @@ If you get a mod of your own to run on a specific distribution, please, feel fre
 what does sshlog do?
 ======
 sshlog generates a log of SSH connections made to a Linux system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory. It can filter log-results based on accepted/failed login(s), or by authentication-method(s) used by the remote connection (password / publickey / PAM).
-
-compatibility
-======
-The main version works on Ubuntu or Ubuntu-based Linux distributions (like Linux Mint, etc), and there are forks for Debian GNU/Linux and Debian-based ReadyNAS devices.
