@@ -15,4 +15,4 @@ sshlog generates a log of SSH connections made to a Linux system, filters result
 
 compatibility
 ======
-This version runs on Ubuntu Server/ Desktop and Linux Mint.
+This version runs on ReadyNAS devices (running Netgear RAIDiator embedded Linux).
