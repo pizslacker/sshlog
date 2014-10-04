@@ -1,7 +1,7 @@
 sshlog
 ======
 
-A command-line Secure SHell log-assembler utility, for cloient-side terminal- / mobile- and NAS-use.
+A command-line <u>S</u>ecure <u>SH</u>ell log-assembler utility, for cloient-side terminal- / mobile- and NAS-use.
 
 sshlog is a command-line log-assembler utility, meant for Linux administrators / datacenter operators with sufficient command-line interface (CLI) experience. It was prototyped to be useful on computer-terminals and mobile devices, like Android-powered smart-phones/tablets/notebooks and similar low-power computers.
 
