@@ -1,5 +1,5 @@
-sshlog
-======
+sshlog v1.2.1 (ReadyNAS)
+========================
 
 A command-line Secure SHell log-assembler utility, for client-side terminal- / mobile- and NAS-use.
 
