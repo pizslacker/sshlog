@@ -1,5 +1,5 @@
-sshlog
-======
+sshlog v1.0b (Debian GNU/Linux)
+===============================
 
 A command-line <u>S</u>ecure <u>SH</u>ell log-assembler utility, for cloient-side terminal- / mobile- and NAS-use.
 
