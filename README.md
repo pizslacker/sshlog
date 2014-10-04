@@ -1,5 +1,5 @@
-sshlog
-======
+sshlog v6
+=========
 
 A command-line Secure SHell log-assembler utility, for client-side terminal- / mobile- and NAS-use.
 
