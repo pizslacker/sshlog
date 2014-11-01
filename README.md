@@ -15,5 +15,5 @@ sshlog generates a log of SSH connections made to a Linux system, filters result
 
 Compatibility
 ======
-This version runs on Debian GNU/Linux (all versions):
+This version runs on Debian GNU/Linux (*almost* all versions):
 http://www.debian.org/
