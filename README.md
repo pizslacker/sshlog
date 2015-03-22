@@ -19,6 +19,8 @@ There are also branches for: Debian GNU/Linux and Netgear RAIDiator (ReadyNAS),
 
 If you get a mod of your own to run on a specific distribution, please, feel free to mail a copy to me and I'll add it to the repo (and give appropriate accredidation on the website, of course)
 
+<img src="https://lh4.googleusercontent.com/-hWHfIMKKQkI/UqmeloDDAAI/AAAAAAAAGAY/8lmCDmqil7o/w483-h805-no/Screenshot_2013-12-11-02-23-18.png" widh="500px" title="sshlog running through ConnectBot on Android v4.x" />
+
 what does sshlog do?
 ======
 sshlog generates a log of SSH connections made to a Linux system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory. It can filter log-results based on accepted/failed login(s), or by authentication-method(s) used by the remote connection (password / publickey / PAM).
