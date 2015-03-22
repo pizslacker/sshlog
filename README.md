@@ -19,7 +19,7 @@ There are also branches for: Debian GNU/Linux and Netgear RAIDiator (ReadyNAS),
 
 If you get a mod of your own to run on a specific distribution, please, feel free to mail a copy to me and I'll add it to the repo (and give appropriate accredidation on the website, of course)
 
-<img src="https://lh4.googleusercontent.com/-hWHfIMKKQkI/UqmeloDDAAI/AAAAAAAAGAY/8lmCDmqil7o/w483-h805-no/Screenshot_2013-12-11-02-23-18.png" widh="250px" title="sshlog running through ConnectBot on Android v4.x" />
+<img src="https://lh4.googleusercontent.com/-hWHfIMKKQkI/UqmeloDDAAI/AAAAAAAAGAY/8lmCDmqil7o/w483-h805-no/Screenshot_2013-12-11-02-23-18.png" width="250px" title="sshlog running through ConnectBot on Android v4.x" />
 
 what does sshlog do?
 ======
