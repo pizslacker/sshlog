@@ -15,5 +15,5 @@ sshlog generates a log of SSH connections made to a Linux system, filters result
 
 compatibility
 ======
-This version runs on ReadyNAS devices (running Netgear RAIDiator embedded Linux):
+This version runs on ReadyNAS devices (running Netgear RAIDiator ARM- / x86-Linux):
 http://www.readynas.com/
