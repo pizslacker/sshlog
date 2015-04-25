@@ -9,6 +9,10 @@ sshlog is a command-line log-assembler utility, meant for Linux administrators /
 
 Allthough originally written for server-use, it has proven to be quite a useful log-assembler tool on any Linux-box that runs an OpenSSH-server :)
 
+```
+TIP: I higly recommend installing "Fail2Ban" to defend against malicious SSH-bruteforcing.
+```
+
 Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, laptops, VPS', workstations, routers, etc.) to provide simple, text-based log-access throughout my network-infrastructure. Giving me complete access-history at my fingertips, wherever, whenever.
 
 <img src="https://lh4.googleusercontent.com/-7c8yB44g20M/US0NYA0T5iI/AAAAAAAABbY/VJKxdmC8HJ8/w867-h632-no/sshlog-viewer-1.5-20130226-2.png" width="500px" title="sshlog-viewer (gui) @PuTTY" />
