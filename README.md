@@ -28,3 +28,23 @@ If you get a mod of your own to run on a specific distribution, please, feel fre
 what does sshlog do?
 ======
 sshlog generates a log of SSH connections made to a Linux system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory. It can filter log-results based on accepted/failed login(s), or by authentication-method(s) used by the remote connection (password / publickey / PAM).
+
+installing
+=======
+Just un-tar the tarball:
+
+```
+tar -xvf sshlog-x.x.tar.gz
+```
+
+Copy the shell-script to /usr/local/sbin:
+
+```
+sudo cp sshlog-x.x/bash/sshlog /usr/local/sbin
+```
+
+Then copy (select) man1-files (< program-name >.1.gz) to /usr/local/share/man/man1.
+
+```
+sudo cp sshlog-x.x/man/sshlog.1.gz /usr/local/share/man/man1
+```
