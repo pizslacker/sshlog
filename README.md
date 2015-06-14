@@ -31,17 +31,12 @@ sshlog generates a log of SSH connections made to a Linux system, filters result
 
 installing
 =======
-Just un-tar the tarball:
-```
-tar -xvf sshlog-x.x.tar.gz
-```
-
-Copy the shell-script to /usr/local/sbin:
+Copy the shell-script(s) to '/usr/local/sbin':
 ```
 sudo cp sshlog-x.x/bash/sshlog /usr/local/sbin
 ```
 
-Then copy (select) man1-files (< program-name >.1.gz) to /usr/local/share/man/man1.
+Then copy (select) man1-files (< program-name >.1.gz) to '/usr/local/share/man/man1'.
 ```
 sudo cp sshlog-x.x/man/sshlog.1.gz /usr/local/share/man/man1
 ```
