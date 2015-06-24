@@ -133,7 +133,7 @@ sshlog_parser () {
     #
     if [ -x dialog ]; then
         if [ -x sshlog-viewer ]; then
-            sshlogviewer "$SSHLOGFILE";
+            sshlog-viewer "$SSHLOGFILE";
         fi
     else
         less "$SSHLOGFILE";
