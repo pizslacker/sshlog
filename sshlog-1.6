@@ -23,7 +23,7 @@
 # v1.5.x   - @lastchange 20130226-18:01-GMT+1
 #
 #
-MDATE="20150624-15:25-GMT+1"
+MDATE="20150624-15:40-GMT+1"
 LCHANGE=$MDATE
 VER=1.6
 REV=12
@@ -132,7 +132,7 @@ sshlog_parser () {
     # Else, sshlog-viewer will revert to using 'less'.
     #
     if [ -x dialog ]; then
-        if [ -x sshlogviewer ]; then
+        if [ -x sshlog-viewer ]; then
             sshlogviewer "$SSHLOGFILE";
         fi
     else
