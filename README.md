@@ -9,7 +9,7 @@ It was prototyped to be useful on small computer-terminals and mobile devices, l
 
 <img src="https://lh4.googleusercontent.com/-MBfaih-yCwU/UZDFuvdFf7I/AAAAAAAACeM/zyx4jH4ZR9k/s1000/sshlog-failed-using-less-root.png" width="500px" title="sshlog (cli) @PuTTY" />
 
-Although originally written for bigrig/server-use, it has proven to be quite a useful little log-script tool on any Linux-box that runs an <b>OpenSSH</b>-server :)
+Although originally written for bigrig/server-use, it has proven to be quite a useful little log-script tool on any Linux-box that runs an <b>OpenSSH</b>-server :) both for account-auditing and <b>p4r4n0|4</b>.
 <b>
 ```
 I highly recommend installing "Fail2Ban" to defend against SSH-bruteforcing!
