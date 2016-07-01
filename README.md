@@ -5,7 +5,7 @@ A command-line (<b>S</b>)ecure (<b>SH</b>)ell (<b>LOG</b>)-utility, for client-s
 
 <b>sshlog</b> is a Bash-script to assemble ssh-connection logs, meant firstly for Linux-administrators / datacenter-operators with sufficient command-line interface (CLI) experience, or mostly anyone who can benefit from using it ;)
 
-It was prototyped to be useful on small computer-terminals and mobile devices, like Android smart-phones / -tablets / -netbooks and similar low-power computers.
+It was prototyped to be useful on small computer-terminals and mobile devices, like Android smart-phones / -tablets / -netbooks, nowadays usually on low-end Windows 10 hardware and similar low-power computers.
 
 <img src="https://lh4.googleusercontent.com/-MBfaih-yCwU/UZDFuvdFf7I/AAAAAAAACeM/zyx4jH4ZR9k/s1000/sshlog-failed-using-less-root.png" width="500px" title="sshlog (cli) @PuTTY" />
 
