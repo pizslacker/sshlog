@@ -10,7 +10,7 @@ A command-line (<b>S</b>)ecure (<b>SH</b>)ell (<b>LOG</b>)-utility, for client-s
 Allthough originally written for server-use, it has proven to be quite a useful log-assembler tool on any Linux-box that runs an OpenSSH-server :)
 
 ```
-<b> >>> I highly recommend installing "Fail2Ban" to defend against SSH-bruteforcing! <<< </b>
+>>> I highly recommend installing "Fail2Ban" to defend against SSH-bruteforcing! <<<
 ```
 
 Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, laptops, VPS', workstations, routers, etc.) to provide simple, text-based log-access throughout my network-infrastructure. Giving me complete access-history at my fingertips, wherever, whenever.
