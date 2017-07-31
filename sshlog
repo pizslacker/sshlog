@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# SSHlog v1.6 (c)2017 Kim Olsen kim-at-pizslacker.org
+# SSHlog v1.6 (c)2017 Kim Olsen kim-at-pizslacker-dot-org
 #
 # Parses/filters system auth-logs for SSH access requests.
 #
