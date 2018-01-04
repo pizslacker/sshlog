@@ -1,0 +1,55 @@
+#!/bin/sh
+#
+# SSHlogviewer v1.6
+#
+# @author Kim Olsen <kim@pizslacker.org>
+#
+# v1.6 @lastchange 20150624-15:26-GMT+1
+# v1.5 @lastchange 20130320-12:48-GMT+1
+
+# Check if 'dialog' is installed on system.
+if [ -x "$(which dialog)" ]; then
+    DIALOG=1;
+else
+    # Dialog is not installed, inform user and revert to using 'less'.
+    $(which clear);
+    echo;
+    echo " You need to install \033[1;37mdialog\033[0m to use \033[1;37msshlog-viewer\033[0m (a GUI-like viewer front-end).";
+    echo;
+    echo -n " Press \033[1;37m[Enter]\033[0m to continue using \033[1;37mless\033[0m(CLI) instead." && read RUN;
+    if [ "$RUN" != NULL ]; then
+        if [ -f "$1" ]; then
+            {
+            $(which clear);
+            $(which less) "$1" && $(which clear) && exit 0;
+            }
+        else
+            {
+            $(which clear);
+            echo;
+            echo "You must supply a valid logfile to display!";
+            echo;
+            exit 1;
+            }
+        fi
+    fi
+fi
+
+if [ "$DIALOG" != NULL ]; then
+    # Runs 'dialog' (if installed) to display log-content.
+    if [ "$1" != "" ]; then
+        {
+        dialog --backtitle "sshlog-viewer (v1.5)" \
+        --title "$1" \
+        --msgbox "$(cat ""$1"")" 32 98 && clear && exit 0;
+        }
+    elif [ ! -f "$1" ]; then
+        {
+        $(which clear);
+        echo;
+        echo "You must supply a valid logfile to display!";
+        echo;
+        exit 1;
+        }
+    fi
+fi

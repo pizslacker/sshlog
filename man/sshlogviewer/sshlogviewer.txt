@@ -1,0 +1,26 @@
+sshlogviewer "1" "" "sshlogviewer - GUI-like log-viewer for SSH logs (on a console)."
+NAME
+sshlogviewer - "GUI-like" log-viewer for SSH logs (on a console).
+
+SYNOPSIS
+sshlogviewer (input filename)
+
+DESCRIPTION
+
+sshlogviewer is a "GUI-like" menu-selector (for use on terminals) for selecting existing sshlogs.
+.br
+
+sshlogviewer makes use of 'dialog', a utility for building console-based 'front ends' in UNIX like operating systems.
+.br
+
+
+EXAMPLE
+EXAMPLEMARK
+
+Example input filename:
+
+~/ssh-logs/sshlog-<year><month><day>.log
+
+EXAMPLEMARK
+
+AUTHOR

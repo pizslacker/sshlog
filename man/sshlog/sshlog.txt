@@ -1,0 +1,38 @@
+sshlog "1" "" "sshlog - generating / viewing SSH logs (on a console)."
+NAME
+sshlog - generating / viewing SSH logs (on a console).
+
+SYNOPSIS
+sshlog (options) (arguments)
+
+DESCRIPTION
+
+sshlog is a shell script that searches system authentication logs (auth.log(.1)) on Linux-type systems for Secure Shell connections and generates simplified logfiles that can then be navigated through on the command-line interface.
+.br
+
+EXAMPLE
+EXAMPLEMARK
+
+Options:
+
+-a		displays accepted SSH connections.
+
+-f		displays failed SSH access attempts.
+
+-t		pipes results to textfile in home-directory and exits.
+
+-v		prints detailed version information.
+
+Arguments:
+
+key		filter logins by publickey authentication.
+
+pass		filter logins by password authentication.
+
+sftp		display sftp request(s).
+
+old		display results from 7 days ago.
+
+EXAMPLEMARK
+
+AUTHOR

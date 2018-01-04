@@ -1,0 +1,24 @@
+sshloglist "1" "" "sshloglist - menu-selector for generated SSH logs (on a console)."
+NAME
+sshloglist - a "GUI-like" menu-selector for ssh logs (on a console).
+
+SYNOPSIS
+sshloglist
+
+DESCRIPTION
+
+sshloglist is a "GUI-like" menu-selector (for use on terminals) for selecting already-generated ssh logs.
+.br
+
+sshloglist makes use of 'dialog', a utility for building console-based 'front ends' in UNIX like operating systems.
+.br
+
+
+EXAMPLE
+EXAMPLEMARK
+
+sshloglist searches through the folder '~/ssh-logs/' and generates a selectable menu of the log-items that are found.
+
+EXAMPLEMARK
+
+AUTHOR

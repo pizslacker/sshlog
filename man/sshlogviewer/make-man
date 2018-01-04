@@ -1,0 +1,4 @@
+sed -f "$1".sed "$1".txt | tee temp.txt && \
+nroff -e -mandoc temp.txt && \
+mv temp.txt "$1".1 && \
+gzip "$1".1;
