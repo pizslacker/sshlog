@@ -2,7 +2,7 @@
 #
 # Generates array of textfile-paths contained in ssh-logs directory.
 #
-# @author Kim Olsen <kim@pizslacker.org>
+# @author (c)2017 Kim Olsen kim-at-pizslacker-dot-org
 #
 # @lastchange 20130320-12:43-GMT+1
 
