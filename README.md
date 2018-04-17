@@ -1,5 +1,5 @@
-sshlog v1.6
-===========
+sshlog v1.6.1
+=============
 
 A command-line (<b>S</b>)ecure (<b>SH</b>)ell (<b>LOG</b>)-utility, for client-side terminal- / mobile- and NAS-use.
 
@@ -9,11 +9,11 @@ It was prototyped to be useful on small computer-terminals and mobile devices, l
 
 what does sshlog do?
 ======
-sshlog generates a log of SSH connections made to a Linux system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory. It can filter log-results based on accepted/failed login(s), or by authentication-method(s) used by the remote connection (password / publickey / PAM).
+<b>sshlog</b> generates a log of SSH connections made to a Linux system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory. It can filter log-results based on accepted/failed login(s), or by authentication-method(s) used by the remote connection (password / publickey / PAM).
 
 <img src="https://lh4.googleusercontent.com/-MBfaih-yCwU/UZDFuvdFf7I/AAAAAAAACeM/zyx4jH4ZR9k/s1000/sshlog-failed-using-less-root.png" width="500px" title="sshlog (cli) @PuTTY" />
 
-Although originally written for bigrig/server-use, it has proven to be quite a useful little log-script tool on any Linux-box that runs an <b>OpenSSH</b>-server :) both for account-auditing and <b>p4r4n0|4</b>.
+Although originally written for bigrig- / server-use, it has proven to be quite a useful little log-tool on any Linux-box that runs an <b>OpenSSH</b>-server :) both for account-auditing and <b>p4r4n0|4!</b>.
 <b>
 ```
 I highly recommend installing "Fail2Ban" to defend against SSH-bruteforcing!
