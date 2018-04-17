@@ -25,5 +25,5 @@ s/(C++)$/ "(C++)"/
 i\
 
 a\
-      \\fIK\\fRim\ \\fIO\\fRlsen   <pizslacker@pizslacker.org>
+      \\fIK\\fRim\ \\fIO\\fRlsen   <kim@pizslacker.org>
 }
