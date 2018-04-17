@@ -34,12 +34,15 @@ If you get a mod of your own to run on a specific distribution, please, feel fre
 
 installing
 =======
-⋅⋅* Copy the shell-script(s) to '/usr/local/sbin':
+
+- Copy the shell-script(s) to '/usr/local/sbin':
+
 ```
 sudo cp sshlog-x.x/bash/sshlog /usr/local/sbin
 ```
 
-⋅⋅* Then copy (select) man1-files (< program-name >.1.gz) to '/usr/local/share/man/man1'.
+- Then copy (select) man1-files (< program-name >.1.gz) to '/usr/local/share/man/man1'.
+
 ```
 sudo cp sshlog-x.x/man/sshlog.1.gz /usr/local/share/man/man1
 ```
