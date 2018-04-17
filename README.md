@@ -1,7 +1,7 @@
 sshlog v1.6.1
 =============
 
-A command-line (<b>S</b>)ecure (<b>SH</b>)ell (<b>LOG</b>)-utility, for client-side terminal- / mobile- and NAS-use.
+A command-line <u>S</u>ecure <u>SH</u>ell <u>LOG</u>-utility, for client-side terminal- / mobile- and NAS-use.
 
 <b>sshlog</b> is a Bash-script to assemble ssh-connection logs, meant firstly for Linux-administrators / datacenter-operators with sufficient command-line interface (CLI) experience, or mostly anyone who can benefit from using it ;)
 
