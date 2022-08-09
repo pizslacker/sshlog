@@ -27,7 +27,7 @@ SSHLOGFILE="/tmp/$(basename $0).$$.txt"
 SSHLOGDIR="ssh-logs"
 # UID=0 run-time condition check.
 if [ $(id -u) -eq 0 ]; then
-# SSHlog parser-function.
+    # SSHlog parser-function.
     sshlog_parser() {
         if [ -z "$FILTER" ]; then
             opts
