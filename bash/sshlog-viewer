@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
-# SSHlogviewer v1.6
+# SSHlogviewer v1.7
 #
 # @author Kim Olsen <kim@pizslacker.org>
-#
+# v1.7 @lastchange 20220809-13:14-GMT+1
 # v1.6 @lastchange 20150624-15:26-GMT+1
 # v1.5 @lastchange 20130320-12:48-GMT+1
 
