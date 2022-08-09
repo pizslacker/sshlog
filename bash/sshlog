@@ -181,27 +181,27 @@ if [ $(id -u) -eq 0 ]; then
             t)  # Pipe text output into logfile
                 TEXT=true;
                 ;;
-            key)
+            key) # Display publickey logins
                 FILTER="${FILTER} publickey"
                 MSG="accepted publickey login(s) "
                 EXT_MSG="this week"
                 ;;
 
-            pam)
+            pam) # Display keyboard-interactive/pam logins
                 FILTER="${FILTER} keyboard-interactive/pam"
                 MSG="accepted pam-login(s) "
                 EXT_MSG="this week"
                 ;;
-            pass)
+            pass) # Display password logins
                 FILTER="${FILTER} password"
                 MSG="accepted password login(s) "
                 EXT_MSG="this week"
                 ;;
-            old)
+            old) # Display logins from two weeks ago
                 AUTH_LOG="/var/log/auth.log.1"
                 EXT_MSG="last week"
                 ;;
-            sftp)
+            sftp) # Display SFTP access attempts
                 SFTP=true;
                 ;;
             help)
