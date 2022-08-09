@@ -216,20 +216,23 @@ if [ $(id -u) -eq 0 ]; then
             \?)
                 infobanner
                 ;;
-            *)  # If EMPTY $FILTER var, print infobanner.
-                if [ -z "$FILTER" ]; then
-                    opts
-                    infobanner
-                else # $FILTER is NON-EMPTY, run sshlog_parser.
-                    sshlog_parser
-                fi
+            *)
+                opts
+                infobanner
                 ;;
         esac
     done
     shift $((OPTIND -1))
+    if [ ! -z "${FILTER}" ]; then
+        sshlog_parser
+    else
+       opts
+       infobanner
+    fi
 else
     echo;
     echo "You need root/sudo to execute sshlog properly!";
     echo;
     exit 1;
 fi
+
