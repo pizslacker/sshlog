@@ -22,7 +22,7 @@ I highly recommend installing "Fail2Ban" to defend against SSH-bruteforcing!
 
 Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, laptops, VPS', workstations, routers, etc.) to provide simple, text-based log-access throughout my network-infrastructure. Giving me complete access-history at my fingertips, wherever, whenever.
 
-<img src="[https://lh4.googleusercontent.com/-7c8yB44g20M/US0NYA0T5iI/AAAAAAAABbY/VJKxdmC8HJ8/w867-h632-no/sshlog-viewer-1.5-20130226-2.png]https://lh3.googleusercontent.com/kbZvstAGVCH0P_YySM3FR7AmefkPI0JXw_EQ8ODgAEgyFKZxsNJSP2awwK9V5Cs7Eu-Bao-ymieL-I8yKCQTX0pRupqB8Bij-3i1V2pj-oFZL5rLcqeieAOGtu1OQdflL5KaOvfmY-lCAhnM6d7lFEEQMSY45TQgy9721qZGSwc5KzVS2ZdHWUTLAToZiKS1TvJMEVnk64lqGwDPschSfuSy4WLJHE_3ACuBnddVGxH2GcCmtQjJRlF4_w6Af6b_qr2_3Zm83eP_N-QETY-Bt4T3WxQuUwJvWqN9gEbzerqpqWdr8NDna6O2xhXFMwMI9LjpkdnthzO5fbwPzmQvZNjGFrYL1USGiuO3C-F_f1lONSrlNhoux4QSGuySLut5U2sh_piDs4mA0ptsCh2eBvNAnrOcJ1pO7P3oUMCoDp-fhoFbSCkZNJPUhKCIvE6y9Ow7V5dxKHy-xd8ueLkbNszUNdO4xOuSAd3t6a-bQbZeGC4_lm3hL02eVxqbm35DKzNCilwMfJX4tYv9JKOLkzeABFRp4pVlOgUeDpRZDubJ0vIoXJxZ8HKwgu8SvEsphcLxeuFQUjMUqEbpPSJMNPOOANhC1QluMmh5CsVy8Ij32z2iKRpQSnS2cnD5qI4J4JfUoS2gC0HvFWd9g_FOj3skzP_ucEpaFlN3ftXjPuaQGUmLidsASxXs7hga0OgFzaEcaG8CU7MDrKYTKF5gdPyACGZwzbim19xMslrctvE3eHSmumMI3hBda-UhYog=w867-h632-no?)" width="500px" title="sshlog-viewer (gui) @PuTTY" />
+<img src="https://lh3.googleusercontent.com/pw/AL9nZEUQZQKYLv0uthTG3sHWerm7N-o4E7YL5y5mI6t7OmhHbamAqnEs4oO64pzPHLOazSkh3K8I7jGoe8Y7VXyaVPTyGXQiIrFfCw8rqzNB1mQ9JMvvc4sAnE2raZceH5zZ2iCL_e2q8IB0E3uYCcLmMUBYzQ=w867-h632-no" width="500px" title="sshlog-viewer (gui) @PuTTY" />
 
 I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu Desktop and Linux Mint).
 
