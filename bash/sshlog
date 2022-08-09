@@ -169,12 +169,12 @@ if [ $(id -u) -eq 0 ]; then
     while getopts ":aftvoldkeypampasssftphtlphv\?" opt; do
         case "${opt}" in
             a)  # Display accepted logins
-                FILTER='Accepted'
+                FILTER="Accepted"
                 MSG="accepted login(s) "
                 EXT_MSG="this week"
                 ;;
             f)  # Display failed logins
-                FILTER='Failed'
+                FILTER="Failed"
                 MSG="failed login attempt(s) "
                 EXT_MSG="this week"
                 ;;
