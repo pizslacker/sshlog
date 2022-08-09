@@ -6,7 +6,7 @@
 /AUTHOR/s/^\(.*\)$/\.SH \1/
 
 s/sshlog/\\fIsshlog\\fR/g
- 
+
 /EXAMPLEMARK/,/EXAMPLEMARK/{
 a\
 .br
