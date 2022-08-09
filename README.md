@@ -1,5 +1,5 @@
-sshlog v1.6.1
-=============
+sshlog v1.7
+===========
 
 A command-line **S**ecure **SH**ell **LOG**-utility, for client-side terminal- / mobile- and NAS-use.
 
