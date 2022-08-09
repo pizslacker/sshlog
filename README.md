@@ -14,11 +14,10 @@ what does sshlog do?
 <img src="https://lh3.googleusercontent.com/pw/AL9nZEWqZeFp91CRyGOixcrKjv8pI-vVJKmzpsxORyVR3jgaRgXi-uwBZHENn6IWJ56X8gcag6f4MQ38KQYoOVr5GxtzUferNzJ6wu8P6XtEWFU_EbtDWT9S2_yE-3QFl__ndJvVzV4cEn-cNuyoQVow_UueUw=w867-h632-no" width="500px" title="sshlog (cli) @PuTTY" />
 
 Although originally written for bigrig- / server-use, it has proven to be quite a useful little log-tool on any Linux-box that runs an **OpenSSH**-server :) both for account-auditing and **p4r4n0|4!**.
-**
+
 ```
 I highly recommend installing "Fail2Ban" to defend against SSH-bruteforcing!
 ```
-**
 
 Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, laptops, VPS', workstations, routers, etc.) to provide simple, text-based log-access throughout my network-infrastructure. Giving me complete access-history at my fingertips, wherever, whenever.
 
