@@ -3,7 +3,7 @@
 # Generates array of textfile-paths contained in ssh-logs directory.
 #
 # @author Kim Olsen <kim@pizslacker.org>
-# @lastchange 20130320-12:43-GMT+1
+# @lastchange 20220809-13:14-GMT+1
 DIALOG=$(which dialog)
 if [ -x "$DIALOG" ]; then
     # Temporary loglist.
