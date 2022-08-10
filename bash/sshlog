@@ -125,6 +125,10 @@ if [ $(id -u) -eq 0 ]; then
         echo "Output option:"
         echo "-t        - pipe results to textfile in 'ssh-logs' dir."
         echo
+        echo "Filter options:"
+        echo "-p        - display password login(s)."
+        echo "-k        - display publickey login(s)."
+        echo
         echo "Supplemental arguments:"
         echo "-s        - display SFTP request(s)."
         echo "-o        - display results from 7 days ago."
