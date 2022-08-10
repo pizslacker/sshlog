@@ -143,10 +143,6 @@ if [ $(id -u) -eq 0 ]; then
     if [ ! $AUTH_LOG ]; then
         AUTH_LOG=/var/log/auth.log;
     fi
-    # Force-set 'AUTH_LOG', if unset.
-    if [ ! $AUTH_LOG ]; then
-        AUTH_LOG=/var/log/auth.log;
-    fi
     # `Getopts` loop -> get options from command line
     while getopts "aftvoldkeypampasssftphelph\?" opt; do
         case "${opt}" in
