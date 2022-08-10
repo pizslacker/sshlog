@@ -156,6 +156,14 @@ if [ $(id -u) -eq 0 ]; then
                 MSG="failed login attempt(s) "
                 EXT_MSG="this week"
                 ;;
+            p)
+                FILTERWORD=" password"
+                MSG=" password login(s)"
+                ;;
+            k)
+                FILTERWORD=" publickey"
+                MSG=" publickey login(s)"
+                ;;
             t)
                 TEXT=true
                 ;;
