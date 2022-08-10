@@ -57,7 +57,7 @@ if [ $(id -u) -eq 0 ]; then
                 echo "0 SFTP request(s) "$EXT_MSG >> "$SSHLOGFILE";
                 echo >> "$SSHLOGFILE";
             fi
-        fi
+       fi
        if [ "$TEXT" = true ]; then
             if [ ! -d ~/"$SSHLOGDIR" ]; then
             {
@@ -98,7 +98,7 @@ if [ $(id -u) -eq 0 ]; then
             }
             fi
         fi
-# Use 'sshlog-viewer', if 'dialog' is installed,
+        # Use 'sshlog-viewer', if 'dialog' is installed,
         # else, sshlog will revert to using 'less'.
         #
         if [ -x dialog ]; then
