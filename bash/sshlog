@@ -14,7 +14,7 @@
 # v1.7.x   - @lastchange 20220808-13:41-GMT+1
 #
 # Program vars
-MDATE="20220808-14:33-GMT+1";VER=1.7;REV=1;
+MDATE="20220809-14:18-GMT+1";VER=1.7;REV=2;
 # Temporary data-file.
 SSHLOGFILE="/tmp/$(basename $0).$$.txt"
 # ssh-logs directory.
