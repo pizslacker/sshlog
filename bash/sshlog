@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 # SSHlog v1.7
 #
@@ -11,12 +11,6 @@
 # @author Kim Olsen <pizslacker@pizslacker.org>
 #
 # v0.9.x   - @lastchange 20120730-22:20-GMT+1
-# v1.0.x   - @lastchange 20120814-01:11-GMT+1
-# v1.2.x   - @lastchange 20120916-02:09-GMT+1
-# v1.3.x   - @lastchange 20121008-10:04-GMT+1
-# v1.4.x   - @lastchange 20130224-10:03-GMT+1
-# v1.5.x   - @lastchange 20130226-18:01-GMT+1
-# v1.6.x   - @lastchange 20130620-17:10-GMT+1
 # v1.7.x   - @lastchange 20220808-13:41-GMT+1
 #
 # Program vars
@@ -29,47 +23,31 @@ SSHLOGDIR="ssh-logs"
 if [ $(id -u) -eq 0 ]; then
     # SSHlog parser-function.
     sshlog_parser() {
-        if [ -z "$FILTER" ]; then
-            opts
-            infobanner
-            exit 1;
-        fi
         if [ ! -d ~/"$SSHLOGDIR" ]; then
             mkdir -p ~/"$SSHLOGDIR";
         fi
         echo "SSHlog v$VER" > "$SSHLOGFILE";
         echo >> "$SSHLOGFILE";
         # Output filtered sshlog results into data-file.
-        cat "$AUTH_LOG" | grep ' sshd\[' | grep "$FILTER" >> "$SSHLOGFILE" && echo >> "$SSHLOGFILE";
+        if [ ! -z "$FILTER" ] && [ -z "$FILTERWORD" ]; then
+           cat "$AUTH_LOG" | grep ' sshd\[' | grep "$FILTER" >> "$SSHLOGFILE" && echo >> "$SSHLOGFILE";
+        else
+           cat "$AUTH_LOG" | grep ' sshd\[' | grep "$FILTER$FILTERWORD" >> "$SSHLOGFILE" && echo >> "$SSHLOGFILE";
+        fi
         # Count number of logins (lines from auth-log output).
-        # Assign type of count according to '$KEYWORD'.
-        if [ "$FILTER" = "Accepted" ]; then
+        # Assign type of count according to '$FILTER'.
+        if [ "$FILTER" = "Accepted" ] && [ -z "$FILTERWORD" ]; then
             echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
             $MSG $EXT_MSG >> "$SSHLOGFILE";
-        elif [ "$FILTER" = "Failed" ]; then
-            echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
-            $MSG $EXT_MSG >> "$SSHLOGFILE";
-        elif [ "$FILTER" = "Accepted publickey" ]; then
-            echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
-            $MSG $EXT_MSG >> "$SSHLOGFILE";
-        elif [ "$FILTER" = "Accepted password" ]; then
-            echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
-            $MSG $EXT_MSG >> "$SSHLOGFILE";
-        elif [ "$FILTER" = "Failed publickey" ]; then
-            echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
-            $MSG $EXT_MSG >> "$SSHLOGFILE";
-        elif [ "$FILTER" = "Failed password" ]; then
-            echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
-            $MSG $EXT_MSG >> "$SSHLOGFILE";
-        elif [ "$FILTER" = "Accepted keyboard-interactive/pam" ]; then
+        elif [ "$FILTER" = "Failed" ] && [ -z "$FILTERWORD" ]; then
             echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
             $MSG $EXT_MSG >> "$SSHLOGFILE";
         fi
         echo >> "$SSHLOGFILE";
         # Append retreived SFTP request(s), if 'KEYWORD' is not 'Failed'.
-        if "$SFTP"; then
+        if [ "$SFTP" = true ]; then
             SFTP_CNT=$(cat "$AUTH_LOG" | grep "/usr/bin/sftp" | wc -l)
-            if [ "$SFTP_CNT" != "0" ]; then
+            if [ "$SFTP_CNT" -gt 0 ]; then
                 cat "$AUTH_LOG" | grep 'subsystem request for sftp' >> "$SSHLOGFILE";
                 # Count number of sftp-requests (lines from auth-log output).
                 echo $SFTP_CNT" SFTP request(s) "$EXT_MSG >> "$SSHLOGFILE";
@@ -80,11 +58,10 @@ if [ $(id -u) -eq 0 ]; then
                 echo >> "$SSHLOGFILE";
             fi
         fi
-
-        if "$TEXT"; then
+       if [ "$TEXT" = true ]; then
             if [ ! -d ~/"$SSHLOGDIR" ]; then
-                {
-                mkdir -p ~/"$SSHLOGDIR";
+            {
+            mkdir -p ~/"$SSHLOGDIR";
                 if [ "$FILTER" = "Accepted" ]; then
                     {
                     cat "$SSHLOGFILE" > /tmp/sshlog-accepted-$(date +%Y%m%d).log;
@@ -92,7 +69,7 @@ if [ $(id -u) -eq 0 ]; then
                     sudo chown $USER:$USER ~/ssh-logs/sshlog-accepted-$(date +%Y%m%d).log;
                     exit 0;
                     }
-                elif [ "$FILTER" = "Failed password" ]; then
+                elif [ "$FILTE" = "Failed" ]; then
                     {
                     cat "$SSHLOGFILE" > /tmp/sshlog-failed-$(date +%Y%m%d).log;
                     mv /tmp/sshlog-failed-$(date +%Y%m%d).log ~/ssh-logs/;
@@ -110,7 +87,7 @@ if [ $(id -u) -eq 0 ]; then
                     sudo chown $USER:$USER ~/ssh-logs/sshlog-accepted-$(date +%Y%m%d).log;
                     exit 0;
                     }
-                elif [ "$FILTER" = "Failed password" ]; then
+                elif [ "$FILTER" = "Failed" ]; then
                     {
                     cat "$SSHLOGFILE" > /tmp/sshlog-failed-$(date +%Y%m%d).log;
                     mv /tmp/sshlog-failed-$(date +%Y%m%d).log ~/ssh-logs/;
@@ -118,42 +95,39 @@ if [ $(id -u) -eq 0 ]; then
                     exit 0;
                     }
                 fi
-                }
+            }
             fi
         fi
-        # Use 'sshlog-viewer', if 'dialog' is installed,
+# Use 'sshlog-viewer', if 'dialog' is installed,
         # else, sshlog will revert to using 'less'.
         #
         if [ -x dialog ]; then
-            if [ -x sshlogviewer ]; then
-                clear && sshlogviewer "$SSHLOGFILE";
+            if [ -x sshlog-viewer ]; then
+                clear && sshlog-viewer "$SSHLOGFILE";
             fi
         else
             clear && less "$SSHLOGFILE";
         fi
         rm -f "$SSHLOGFILE" 2>&1 && exit 0;
-    } # END sshlog_parser
+    }
     opts() { echo "Too few arguments given." 1>&2;}
     infobanner() {
         echo
         echo "SSHlog v"$VER
         echo
-        echo "Usage: sshlog [-a|-f|-v] [-t] [key|pass] [sftp] [old]"
+        echo "Usage: sshlog [-a|-f|-v] [-t] [-s|-o]"
         echo
         echo "Options:"
         echo "-a        - display accepted login(s)."
         echo "-f        - display failed login attempt(s)."
         echo "-v        - display detailed version-info."
+        echo
+        echo "Output option:"
         echo "-t        - pipe results to textfile in 'ssh-logs' dir."
         echo
-        echo "Filter-arguments:"
-        echo "-key       - filter logins by publickey authentication."
-        echo "-pam       - filter logins by PAM authentication."
-        echo "-pass      - filter logins by password authentication."
-        echo
         echo "Supplemental arguments:"
-        echo "-sftp      - display SFTP request(s)."
-        echo "-old       - display results from 7 days ago."
+        echo "-s        - display SFTP request(s)."
+        echo "-o        - display results from 7 days ago."
         echo
         echo "Use 'PgUp' and 'PgDn' keys to navigate results."
         echo
@@ -165,47 +139,32 @@ if [ $(id -u) -eq 0 ]; then
     if [ ! $AUTH_LOG ]; then
         AUTH_LOG=/var/log/auth.log;
     fi
+# Force-set 'AUTH_LOG', if unset.
+    if [ ! $AUTH_LOG ]; then
+        AUTH_LOG=/var/log/auth.log;
+    fi
     # `Getopts` loop -> get options from command line
-    while getopts ":aftvoldkeypampasssftphtlphv\?" opt; do
+    while getopts "aftvoldkeypampasssftphelph\?" opt; do
         case "${opt}" in
-            a)  # Display accepted logins
+            a)
                 FILTER="Accepted"
                 MSG="accepted login(s) "
                 EXT_MSG="this week"
                 ;;
-            f)  # Display failed logins
+            f)
                 FILTER="Failed"
                 MSG="failed login attempt(s) "
                 EXT_MSG="this week"
                 ;;
-            t)  # Pipe text output into logfile
-                TEXT=true;
+            t)
+                TEXT=true
                 ;;
-            key) # Display publickey logins
-                FILTER="${FILTER} publickey"
-                MSG="accepted publickey login(s) "
-                EXT_MSG="this week"
-                ;;
-
-            pam) # Display keyboard-interactive/pam logins
-                FILTER="${FILTER} keyboard-interactive/pam"
-                MSG="accepted pam-login(s) "
-                EXT_MSG="this week"
-                ;;
-            pass) # Display password logins
-                FILTER="${FILTER} password"
-                MSG="accepted password login(s) "
-                EXT_MSG="this week"
-                ;;
-            old) # Display logins from two weeks ago
+            o)
                 AUTH_LOG="/var/log/auth.log.1"
                 EXT_MSG="last week"
                 ;;
-            sftp) # Display SFTP access attempts
-                SFTP=true;
-                ;;
-            help)
-                infobanner
+            s)
+                SFTP=true
                 ;;
             h)
                 infobanner
@@ -228,6 +187,7 @@ if [ $(id -u) -eq 0 ]; then
     else
        opts
        infobanner
+       exit 1
     fi
 else
     echo;
