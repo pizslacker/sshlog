@@ -16,7 +16,7 @@
 # Program vars
 MDATE="20220915-14:49-GMT+1";VER=1.7;REV=2;
 # Temporary data-file.
-SSHLOGFILE="/tmp/$(basename $0).$$.txt"
+SSHLOGFILE="/tmp/$(basename $0).$$"
 # ssh-logs directory.
 SSHLOGDIR="ssh-logs"
 # UID=0 (root/sudo) run-time condition check.
