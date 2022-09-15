@@ -19,7 +19,7 @@ MDATE="20220809-14:18-GMT+1";VER=1.7;REV=2;
 SSHLOGFILE="/tmp/$(basename $0).$$.txt"
 # ssh-logs directory.
 SSHLOGDIR="ssh-logs"
-# UID=0 run-time condition check.
+# UID=0 (root/sudo) run-time condition check.
 if [ $(id -u) -eq 0 ]; then
     # SSHlog parser-function.
     sshlog_parser() {
