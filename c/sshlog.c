@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
             printf("Output dirigeres til: %s\n", out_path);
         } else {
             fprintf(stderr, "Feil: Kunne ikke finne brukerens hjemmemappe.\n");
-            output_to_file = 0; // Fald tilbage til stdout
+            output_to_file = 0; // Fall tilbake til stdout
         }
     }
 
