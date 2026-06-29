@@ -10,11 +10,11 @@
 
 void print_usage(const char *prog_name) {
     printf("Brug: %s [-a] [-f] [-m metode] [-o]\n", prog_name);
-    printf("  -a         Vis kun accepterede logins (Accepted)\n");
+    printf("  -a         Vis kun aksepterte logins (Accepted)\n");
     printf("  -f         Vis kun mislykkede logins (Failed)\n");
-    printf("  -m metode  Filtrer efter godkendelsesmetode (f.eks. password, publickey)\n");
-    printf("  -o         Gem output i ~/ssh-logs i en tidsstemplet fil\n");
-    printf("  -h         Vis denne hjælpemenu\n");
+    printf("  -m metode  Filtrer etter godkjennelse metode (f.eks. password, publickey)\n");
+    printf("  -o         Skriv output i ~/ssh-logs i en tidsstemplet fil\n");
+    printf("  -h         Vis denne hjelp menyen\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     // Åpne SSH-loggfilen (krever sudo for å lese /var/log/auth.log)
     FILE *log_file = fopen("/var/log/auth.log", "r");
     if (!log_file) {
-        perror("Fejl: Kunne ikke åbne /var/log/auth.log (Kør evt. programmet med sudo)");
+        perror("Feil: Kunne ikke åpne /var/log/auth.log (Kjør programmet med sudo!)");
         return EXIT_FAILURE;
     }
 
@@ -74,13 +74,13 @@ int main(int argc, char *argv[]) {
             
             out_file = fopen(out_path, "w");
             if (!out_file) {
-                perror("Fejl: Kunne ikke oprette output-fil i ~/ssh-logs");
+                perror("Fejl: Kunne ikke opprette logg-fil i ~/ssh-logs");
                 fclose(log_file);
                 return EXIT_FAILURE;
             }
             printf("Output dirigeres til: %s\n", out_path);
         } else {
-            fprintf(stderr, "Fejl: Kunne ikke finde brugerens hjemmemappe.\n");
+            fprintf(stderr, "Feil: Kunne ikke finne brukerens hjemmemappe.\n");
             output_to_file = 0; // Fald tilbage til stdout
         }
     }
