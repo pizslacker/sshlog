@@ -1,4 +1,4 @@
-sshlog v1.7
+sshlog v1.8
 ===========
 
 A command-line **S**ecure **SH**ell **LOG**-utility, for client-side terminal- / mobile- and NAS-use.
