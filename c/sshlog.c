@@ -9,7 +9,7 @@
 #define MAX_LINE 2048
 
 void print_usage(const char *prog_name) {
-    printf("Brug: %s [-a] [-f] [-m metode] [-o]\n", prog_name);
+    printf("Bruk: %s [-a] [-f] [-m metode] [-o]\n", prog_name);
     printf("  -a         Vis kun aksepterte logins (Accepted)\n");
     printf("  -f         Vis kun mislykkede logins (Failed)\n");
     printf("  -m metode  Filtrer etter godkjennelse metode (f.eks. password, publickey)\n");
