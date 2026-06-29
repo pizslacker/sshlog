@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Åbn SSH-logfilen (kræver typisk sudo for at læse /var/log/auth.log)
+    // Åpne SSH-loggfilen (krever sudo for å lese /var/log/auth.log)
     FILE *log_file = fopen("/var/log/auth.log", "r");
     if (!log_file) {
         perror("Fejl: Kunne ikke åbne /var/log/auth.log (Kør evt. programmet med sudo)");
@@ -47,11 +47,11 @@ int main(int argc, char *argv[]) {
 
     FILE *out_file = stdout;
 
-    // Opsætning af output til ~/ssh-logs, hvis '-o' blev valgt
+    // Oppsett av output til ~/ssh-logs, hvis '-o' er valgt
     if (output_to_file) {
         const char *homedir = getenv("HOME");
         if (!homedir) {
-            // Fald tilbage til at finde hjemmemappen via bruger-id
+            // Finn hjemmemappen via bruker-id
             struct passwd *pw = getpwuid(getuid());
             if (pw) homedir = pw->pw_dir;
         }
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
             char log_dir[512];
             snprintf(log_dir, sizeof(log_dir), "%s/ssh-logs", homedir);
             
-            // Opret mappen (svarer til 'mkdir -p ~/ssh-logs')
+            // Oppret mappe (svarer til 'mkdir -p ~/ssh-logs')
             mkdir(log_dir, 0755); 
 
             // Generer tidsstempel til filnavnet
@@ -85,27 +85,27 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Gennemgå logfilen linje for linje
+    // Gjennomgå loggfilen linje for linje
     char line[MAX_LINE];
     while (fgets(line, sizeof(line), log_file)) {
-        // Ignorer linjer der ikke relaterer sig til sshd
+        // Ignorer linjer som ikke relaterer til sshd
         if (strstr(line, "sshd") == NULL) {
             continue;
         }
 
-        int match = 1; // Antag et match, indtil en regel fejler
+        int match = 1; // Anta en match, inntil en regel feiler
 
         if (filter_accepted && strstr(line, "Accepted") == NULL) match = 0;
         if (filter_failed && strstr(line, "Failed") == NULL) match = 0;
         if (filter_method[0] != '\0' && strstr(line, filter_method) == NULL) match = 0;
 
-        // Udskriv linjen, hvis den består filter-kravene
+        // Skriv ut linjen, hvis den består filter-kravene
         if (match) {
             fprintf(out_file, "%s", line);
         }
     }
 
-    // Ryd pænt op
+    // Rydd opp
     fclose(log_file);
     if (out_file != stdout) {
         fclose(out_file);
