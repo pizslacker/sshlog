@@ -1,5 +1,6 @@
 # C-implementation of `sshlog`
 
 ### Compile binary:
-cd src/
-make
+```bash
+cd src/ && make
+```
