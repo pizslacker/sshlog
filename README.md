@@ -15,7 +15,7 @@ what does sshlog do?
 
 <img src="https://lh3.googleusercontent.com/pw/AL9nZEWqZeFp91CRyGOixcrKjv8pI-vVJKmzpsxORyVR3jgaRgXi-uwBZHENn6IWJ56X8gcag6f4MQ38KQYoOVr5GxtzUferNzJ6wu8P6XtEWFU_EbtDWT9S2_yE-3QFl__ndJvVzV4cEn-cNuyoQVow_UueUw=w867-h632-no" width="500px" title="sshlog (cli) @PuTTY" />
 
-Although originally written for bigrig- / server-use, it has proven to be quite a useful little log-tool on any Linux-box that runs an **OpenSSH**-server :) both for account-auditing and **p4r4n0|4!**.
+Although originally written for bigrig- / server-use, it has proven to be quite a useful little log-tool on any Linux-box that runs an `OpenSSH`-server :) both for account-auditing and **p4r4n0|4!**.
 
 ```
 I highly recommend installing "Fail2Ban" to defend against SSH-bruteforcing!
@@ -30,9 +30,9 @@ I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu Deskt
 installing
 =======
 
-- Copy the shell-script(s) / C binary to **/usr/local/sbin**:
+- Copy the shell-script(s) / C binary to `/usr/local/sbin`:
 
-- Then copy (select) man1-files (< program-name >.1.gz) to **/usr/local/share/man/man1**.
+- Then copy (select) man1-files (< program-name >.1.gz) to `/usr/local/share/man/man1`.
 
 ```
 sudo cp man/sshlog.1.gz /usr/local/share/man/man1
