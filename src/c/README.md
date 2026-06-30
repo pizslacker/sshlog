@@ -2,5 +2,5 @@
 
 ### Compile binary:
 ```bash
-cd src/ && make
+$ make_
 ```
