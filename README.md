@@ -30,7 +30,7 @@ I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu Deskt
 installing
 =======
 
-- Copy the shell-script(s) to **/usr/local/sbin**:
+- Copy the shell-script(s) / C binary to **/usr/local/sbin**:
 
 ```
 sudo cp sshlog-x.x/bash/sshlog /usr/local/sbin
