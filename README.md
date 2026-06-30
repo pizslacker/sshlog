@@ -32,12 +32,8 @@ installing
 
 - Copy the shell-script(s) / C binary to **/usr/local/sbin**:
 
-```
-sudo cp sshlog-x.x/bash/sshlog /usr/local/sbin
-```
-
 - Then copy (select) man1-files (< program-name >.1.gz) to **/usr/local/share/man/man1**.
 
 ```
-sudo cp sshlog-x.x/man/sshlog.1.gz /usr/local/share/man/man1
+sudo cp man/sshlog.1.gz /usr/local/share/man/man1
 ```
