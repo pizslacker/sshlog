@@ -1,1 +1,1 @@
-### Script + source code directory.
+### Script + C source code directory.
