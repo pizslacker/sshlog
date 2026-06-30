@@ -27,12 +27,6 @@ Personally, I've deployed it on all my Linux-powered devices (like: NAS-boxes, l
 
 I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu Desktop and Linux Mint).
 
-There are also branches for: Debian GNU/Linux and Netgear RAIDiator (ReadyNAS),
-
-If you get a mod of your own to run on a specific distribution, please, feel free to mail a copy to me and I'll add it to the repo (and give appropriate accredidation on the website, of course)
-
-<img src="https://lh3.googleusercontent.com/yn4P5e8RSGjHems3ZiejL1Hh14M8U65amp2oiUDe0Qprs4zlplqqpY3uM1ps715VtiCO-77uPynFBo4RwKf1ge7OwAWEsyujyYknpQExJEQdiVVE-UZWaeOK2H_x0VvUjEYMkwgQXOPaxlAQOF6YMQNwE2OjtE4eegWDVn60m0ALkbAXYchAJYhF3CsiWSSStRTiEoZYh7iZ_vhhWzsS0TYW32dGkDgvTvyci1xt9hyLOGbuacg1Ad0QkQOtSbUxS601uop6n_R3aj8EFMyRpnfUwogpUnZtBqjMpvQhJHKTLWtaX2USi4S0_Z7aSjo-8OQCpsvGhxzjgOnAp4l6w41ks8H-zNgVHZnwNy6x5GdjissKjcda2_PPVF3_iNl3SruNJOsPBACQsBAMNNffDhMIbXQ4WitA1e_pkIAZTv2crKIQ9nfTkp8DL7LI3_VemBUA05mKxw1_Wt-fkv6kUl6Z0aQP9cdz9p4xWKQXp-KHFdOgOQFbdpl0Of8GLwGOqkzIb7OXeZQOUpIvyzFvBmWQxBEMEkqfURj_fSc_a0x0uTArZyLZHUoCmINIocpecL8BQ3wbyx2j_hVOO5Yy9o62Zad2VQfX2BoFj_41zVfo74B9sdl1chwBndy2Bj-M2rSakuFOamB-hPaVSoUATamFuaKTX3ezRBUWVTS5C3zGYeRhEunX1-FXnHarV6OGeMMfvglNr5azbaB92zHK7TnU_72L3Ru-tMebTch7q81KBaG7ADGf3hLhEbGv29w=w509-h848-no" width="250px" title="sshlog running through ConnectBot on Android v4.x" />
-
 installing
 =======
 
