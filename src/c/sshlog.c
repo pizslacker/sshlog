@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <pwd.h>
 #include <time.h>
+#include <errno.h> // Nødvendig for å sjekke spesifikke feilkoder (som EEXIST)
 
 #define MAX_LINE 2048
 
@@ -12,9 +13,9 @@ void print_usage(const char *prog_name) {
     printf("Bruk: %s [-a] [-f] [-m metode] [-o]\n", prog_name);
     printf("  -a         Vis kun aksepterte logins (Accepted)\n");
     printf("  -f         Vis kun mislykkede logins (Failed)\n");
-    printf("  -m metode  Filtrer etter godkjennelse metode (f.eks. password, publickey)\n");
-    printf("  -o         Skriv output i ~/ssh-logs i en tidsstemplet fil\n");
-    printf("  -h         Vis denne hjelp menyen\n");
+    printf("  -m metode  Filtrer etter autentiseringsmetode (f.eks. password, publickey)\n");
+    printf("  -o         Lagre utdata i ~/ssh-logs i en tidsstemplet fil\n");
+    printf("  -h         Vis denne hjelpemenyen\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
     char filter_method[256] = {0};
     int output_to_file = 0;
 
-    // Håndter kommandolinjeargumenter med getopt
+    // Håndter kommandolinjeargumenter
     while ((opt = getopt(argc, argv, "afm:oh")) != -1) {
         switch (opt) {
             case 'a': filter_accepted = 1; break;
@@ -38,20 +39,19 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Åpne SSH-loggfilen (krever sudo for å lese /var/log/auth.log)
+    // Åpne SSH-loggfilen (krever typisk sudo på Linux)
     FILE *log_file = fopen("/var/log/auth.log", "r");
     if (!log_file) {
-        perror("Feil: Kunne ikke åpne /var/log/auth.log (Kjør programmet med sudo!)");
+        perror("Feil: Kunne ikke åpne /var/log/auth.log (Kjør evt. programmet med sudo)");
         return EXIT_FAILURE;
     }
 
     FILE *out_file = stdout;
 
-    // Oppsett av output til ~/ssh-logs, hvis '-o' er valgt
+    // Håndter opprettelse av mappe og utdatafil hvis '-o' ble valgt
     if (output_to_file) {
         const char *homedir = getenv("HOME");
         if (!homedir) {
-            // Finn hjemmemappen via bruker-id
             struct passwd *pw = getpwuid(getuid());
             if (pw) homedir = pw->pw_dir;
         }
@@ -60,10 +60,18 @@ int main(int argc, char *argv[]) {
             char log_dir[512];
             snprintf(log_dir, sizeof(log_dir), "%s/ssh-logs", homedir);
             
-            // Oppret mappe (svarer til 'mkdir -p ~/ssh-logs')
-            mkdir(log_dir, 0755); 
+            // Forsøk å opprette mappen med rettigheter 0755 (rwxr-xr-x)
+            if (mkdir(log_dir, 0755) == -1) {
+                // Sjekk om feilen er at mappen allerede eksisterer
+                if (errno != EEXIST) {
+                    perror("Feil: Kunne ikke opprette mappen ~/ssh-logs");
+                    fclose(log_file);
+                    return EXIT_FAILURE;
+                }
+                // Hvis feilen var EEXIST, fortsetter vi bare som normalt.
+            }
 
-            // Generer tidsstempel til filnavnet
+            // Generer tidsstempel for filnavnet
             time_t t = time(NULL);
             struct tm *tm_info = localtime(&t);
             char time_buf[64];
@@ -74,38 +82,37 @@ int main(int argc, char *argv[]) {
             
             out_file = fopen(out_path, "w");
             if (!out_file) {
-                perror("Fejl: Kunne ikke opprette logg-fil i ~/ssh-logs");
+                perror("Feil: Kunne ikke opprette filen i ~/ssh-logs");
                 fclose(log_file);
                 return EXIT_FAILURE;
             }
-            printf("Output dirigeres til: %s\n", out_path);
+            printf("Utdata lagres i: %s\n", out_path);
         } else {
-            fprintf(stderr, "Feil: Kunne ikke finne brukerens hjemmemappe.\n");
-            output_to_file = 0; // Fall tilbake til stdout
+            fprintf(stderr, "Advarsel: Kunne ikke finne brukerens hjemmemappe. Skriver til konsollen (stdout) i stedet.\n");
+            output_to_file = 0; 
         }
     }
 
-    // Gjennomgå loggfilen linje for linje
+    // Behandle loggfilen linje for linje
     char line[MAX_LINE];
     while (fgets(line, sizeof(line), log_file)) {
-        // Ignorer linjer som ikke relaterer til sshd
         if (strstr(line, "sshd") == NULL) {
             continue;
         }
 
-        int match = 1; // Anta en match, inntil en regel feiler
+        int match = 1; 
 
         if (filter_accepted && strstr(line, "Accepted") == NULL) match = 0;
         if (filter_failed && strstr(line, "Failed") == NULL) match = 0;
         if (filter_method[0] != '\0' && strstr(line, filter_method) == NULL) match = 0;
 
-        // Skriv ut linjen, hvis den består filter-kravene
+        // Skriv ut linjen hvis den passerer filteret
         if (match) {
             fprintf(out_file, "%s", line);
         }
     }
 
-    // Rydd opp
+    // Lukk filene for å frigjøre ressurser
     fclose(log_file);
     if (out_file != stdout) {
         fclose(out_file);
@@ -113,3 +120,9 @@ int main(int argc, char *argv[]) {
 
     return EXIT_SUCCESS;
 }
+De viktigste endringene:
+Inkludert <errno.h>.
+
+Sjekker eksplisitt returverdien til mkdir() (if (mkdir(...) == -1)).
+
+Bruker if (errno != EEXIST) for å ignorere feilen dersom mappen allerede ligger der fra en tidligere kjøring av skriptet, men likevel fange opp reelle feil (som mangel på skrivetilgang til hjemmemappen).
