@@ -1,8 +1,6 @@
 sshlog v1.9
 ===========
 
-A command-line **S**ecure **SH**ell **LOG**-utility, for client-side terminal- / mobile- and NAS-use.
-
 **sshlog** is a Bash-script to assemble ssh-connection logs, meant firstly for Linux-administrators / datacenter-operators with sufficient command-line interface (CLI) experience, or mostly anyone who can benefit from using it ;)
 
 As of version 1.8 it also comes as a C-implementation (`src/c/`).
