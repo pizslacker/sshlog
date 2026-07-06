@@ -5,7 +5,7 @@ sshlog v1.9
 
 As of version 1.8 it also comes as a C-implementation (`src/c/`).
 
-It was prototyped to be useful on small computer-terminals and mobile devices, like Android smart-phones / -tablets / -netbooks, and nowadays usually on low-end Windows 10 hardware and similar low-power computers.
+It was prototyped to be useful on small computer-terminals and mobile devices, like Android smart-phones / -tablets / -netbooks.
 
 what does sshlog do?
 ======
