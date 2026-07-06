@@ -120,9 +120,5 @@ int main(int argc, char *argv[]) {
 
     return EXIT_SUCCESS;
 }
-De viktigste endringene:
-Inkludert <errno.h>.
-
-Sjekker eksplisitt returverdien til mkdir() (if (mkdir(...) == -1)).
 
 Bruker if (errno != EEXIST) for å ignorere feilen dersom mappen allerede ligger der fra en tidligere kjøring av skriptet, men likevel fange opp reelle feil (som mangel på skrivetilgang til hjemmemappen).
