@@ -1,4 +1,4 @@
-sshlog v1.9
+sshlog v2.0
 ===========
 
 **sshlog** is a Bash-script to assemble ssh-connection logs, meant firstly for Linux-administrators / datacenter-operators with sufficient command-line interface (CLI) experience, or mostly anyone who can benefit from using it ;)
