@@ -9,7 +9,7 @@ $ sudo apt-get install cargo
 $ make
 ```
 
-The resulting binary can be found in `target`release`.
+The resulting binary can be found in `target/release`.
 
 ### Cleanup:
 ```bash
