@@ -1,6 +1,6 @@
 # `sshlog` in Python
 
-`Python 3.6+` and relies strictly on the **Python Standard Library**.
+`Python 3.6+` + `PEP8` style-guide and relies strictly on the **Python Standard Library**.
 
 ## Usage:
 
