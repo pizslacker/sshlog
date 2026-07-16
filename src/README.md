@@ -1,1 +1,3 @@
-### Script + C source code directory.
+- Bash script
+- C source code
+- Rust source code
