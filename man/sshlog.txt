@@ -19,7 +19,7 @@ Options:
 
 -f		displays failed SSH access attempts.
 
--0		saves results to textfile in home-directory `~/ssh-logs`.
+-o		saves results to textfile in home-directory `~/ssh-logs`.
 
 -v		prints detailed version information.
 
