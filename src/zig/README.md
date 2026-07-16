@@ -1,4 +1,4 @@
-# `sshlog` in Zig
+# `sshlog` in Zig (_**EXPERIMENTAL**_)
 
 This is experimental at the moment, won't even compile...
 
