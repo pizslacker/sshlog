@@ -1,11 +1,13 @@
 # C-implementation of `sshlog`
 
-### Compile binary:
+`C99` and `POSIX` compliant C implementation.
+
+#### Compile binary:
 ```bash
 $ make
 ```
 
-### Cleanup:
+#### Cleanup:
 ```bash
 $ make clean
 ```
