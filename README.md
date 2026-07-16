@@ -15,7 +15,7 @@ It can filter log-results based on accepted/failed login(s), or by authenticatio
 
 <img src="https://lh3.googleusercontent.com/pw/AL9nZEWqZeFp91CRyGOixcrKjv8pI-vVJKmzpsxORyVR3jgaRgXi-uwBZHENn6IWJ56X8gcag6f4MQ38KQYoOVr5GxtzUferNzJ6wu8P6XtEWFU_EbtDWT9S2_yE-3QFl__ndJvVzV4cEn-cNuyoQVow_UueUw=w867-h632-no" width="500px" title="sshlog (cli) @PuTTY" />
 
-Although originally written for bigrig- / server-use, it has proven to be quite a useful little log-tool on any Linux-box that runs an `OpenSSH`-server :) both for account-auditing and **p4r4n0|4!**.
+Although originally written for bigrig- / server-use, it has proven to be quite a useful little log-tool on any Linux/MacOS/BSD-box that runs an `OpenSSH`-server.
 
 I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu / Debian).
 
