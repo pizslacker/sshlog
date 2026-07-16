@@ -21,7 +21,7 @@ Options:
 
 -o		saves results to textfile in home-directory `~/ssh-logs`.
 
--v		prints detailed version information.
+-h		prints this help information.
 
 Arguments:
 
