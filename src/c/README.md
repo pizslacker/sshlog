@@ -1,4 +1,4 @@
-# C-implementation of `sshlog`
+`sshlog` in C
 
 `C99` and `POSIX` compliant C implementation.
 
