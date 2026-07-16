@@ -1,5 +1,6 @@
 - Bash script
 - C source code
+- Go source code
 - Python script
 - Rust source code
 - Zig source code (***EXPERIMENTAL***)
