@@ -1,18 +1,3 @@
-#!/bin/bash
-#
-# SSHlog v1.7
-#
-# Parses/filters system auth-logs for SSH access requests.
-#
-# Cats, greps and echoes accepted/failed ssh logins,
-# and conditionally, sftp requests from
-# '/var/log/auth*' log files.
-#
-# @author Kim Olsen <pizslacker@pizslacker.org>
-#
-# v0.9.x   - @lastchange 20120730-22:20-GMT+1
-# v1.7.x   - @lastchange 20220808-13:41-GMT+1
-#
 #!/usr/bin/env bash
 #
 # sshlog - SSH log analysis tool
