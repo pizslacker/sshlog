@@ -13,194 +13,104 @@
 # v0.9.x   - @lastchange 20120730-22:20-GMT+1
 # v1.7.x   - @lastchange 20220808-13:41-GMT+1
 #
-# Program vars
-MDATE="20220915-14:49-GMT+1";VER=1.7;REV=2;
-# Temporary data-file.
-SSHLOGFILE="/tmp/$(basename $0).$$"
-# ssh-logs directory.
-SSHLOGDIR="ssh-logs"
-# UID=0 (root/sudo) run-time condition check.
-if [ $(id -u) -eq 0 ]; then
-    # SSHlog parser-function.
-    sshlog_parser() {
-        if [ ! -d ~/"$SSHLOGDIR" ]; then
-            mkdir -p ~/"$SSHLOGDIR";
-        fi
-        echo "SSHlog v$VER" > "$SSHLOGFILE";
-        echo >> "$SSHLOGFILE";
-        # Output filtered sshlog results into data-file.
-        if [ ! -z "$FILTER" ] && [ -z "$FILTERWORD" ]; then
-           cat "$AUTH_LOG" | grep ' sshd\[' | grep "$FILTER" >> "$SSHLOGFILE" && echo >> "$SSHLOGFILE";
-        else
-           cat "$AUTH_LOG" | grep ' sshd\[' | grep "$FILTER$FILTERWORD" >> "$SSHLOGFILE" && echo >> "$SSHLOGFILE";
-        fi
-        # Count number of logins (lines from auth-log output).
-        # Assign type of count according to '$FILTER'.
-        if [ "$FILTER" = "Accepted" ] && [ -z "$FILTERWORD" ]; then
-            echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
-            $MSG $EXT_MSG >> "$SSHLOGFILE";
-        elif [ "$FILTER" = "Failed" ] && [ -z "$FILTERWORD" ]; then
-            echo $(cat "$AUTH_LOG" | grep "$FILTER" | wc -l)\
-            $MSG $EXT_MSG >> "$SSHLOGFILE";
-        fi
-        echo >> "$SSHLOGFILE";
-        # Append retreived SFTP request(s), if 'KEYWORD' is not 'Failed'.
-        if [ "$SFTP" = true ]; then
-            SFTP_CNT=$(cat "$AUTH_LOG" | grep "/usr/bin/sftp" | wc -l)
-            if [ "$SFTP_CNT" -gt 0 ]; then
-                cat "$AUTH_LOG" | grep 'subsystem request for sftp' >> "$SSHLOGFILE";
-                # Count number of sftp-requests (lines from auth-log output).
-                echo $SFTP_CNT" SFTP request(s) "$EXT_MSG >> "$SSHLOGFILE";
-                echo >> "$SSHLOGFILE";
-            else
-                # Count number of sftp-requests (lines from auth-log output).
-                echo "0 SFTP request(s) "$EXT_MSG >> "$SSHLOGFILE";
-                echo >> "$SSHLOGFILE";
-            fi
-       fi
-       if [ "$TEXT" = true ]; then
-            if [ ! -d ~/"$SSHLOGDIR" ]; then
-            {
-            mkdir -p ~/"$SSHLOGDIR";
-                if [ "$FILTER" = "Accepted" ]; then
-                    {
-                    cat "$SSHLOGFILE" > /tmp/sshlog-accepted-$(date +%Y%m%d).log;
-                    mv /tmp/sshlog-accepted-$(date +%Y%m%d).log ~/ssh-logs/;
-                    sudo chown $USER:$USER ~/ssh-logs/sshlog-accepted-$(date +%Y%m%d).log;
-                    exit 0;
-                    }
-                elif [ "$FILTER" = "Failed" ]; then
-                    {
-                    cat "$SSHLOGFILE" > /tmp/sshlog-failed-$(date +%Y%m%d).log;
-                    mv /tmp/sshlog-failed-$(date +%Y%m%d).log ~/ssh-logs/;
-                    sudo chown $USER:$USER ~/ssh-logs/sshlog-failed-$(date +%Y%m%d).log;
-                    exit 0;
-                    }
-                fi
-                }
-            else
-                {
-                if [ "$FILTER" = "Accepted" ]; then
-                    {
-                    cat "$SSHLOGFILE" > /tmp/sshlog-accepted-$(date +%Y%m%d).log;
-                    mv /tmp/sshlog-accepted-$(date +%Y%m%d).log ~/ssh-logs/;
-                    sudo chown $USER:$USER ~/ssh-logs/sshlog-accepted-$(date +%Y%m%d).log;
-                    exit 0;
-                    }
-                elif [ "$FILTER" = "Failed" ]; then
-                    {
-                    cat "$SSHLOGFILE" > /tmp/sshlog-failed-$(date +%Y%m%d).log;
-                    mv /tmp/sshlog-failed-$(date +%Y%m%d).log ~/ssh-logs/;
-                    sudo chown $USER:$USER ~/ssh-logs/sshlog-failed-$(date +%Y%m%d).log;
-                    exit 0;
-                    }
-                fi
-            }
-            fi
-        fi
-        # Use 'sshlog-viewer', if 'dialog' is installed,
-        # else, sshlog will revert to using 'less'.
-        #
-        if [ -x dialog ]; then
-            if [ -x sshlog-viewer ]; then
-                clear && sshlog-viewer "$SSHLOGFILE";
-            fi
-        else
-            clear && less "$SSHLOGFILE";
-        fi
-        rm -f "$SSHLOGFILE" 2>&1 && exit 0;
-    }
-    opts() { echo "Too few arguments given." 1>&2;}
-    infobanner() {
-        echo
-        echo "SSHlog v"$VER
-        echo
-        echo "Usage: sshlog [-a|-f|-v] [-t] [-p|-k] [-s|-o]"
-        echo
-        echo "Options:"
-        echo "-a        - display accepted login(s)."
-        echo "-f        - display failed login attempt(s)."
-        echo "-v        - display detailed version-info."
-        echo
-        echo "Output option:"
-        echo "-t        - pipe results to textfile in 'ssh-logs' dir."
-        echo
-        echo "Filter options:"
-        echo "-p        - display password login(s)."
-        echo "-k        - display publickey login(s)."
-        echo
-        echo "Supplemental arguments:"
-        echo "-s        - display SFTP request(s)."
-        echo "-o        - display results from 7 days ago."
-        echo
-        echo "Use 'PgUp' and 'PgDn' keys to navigate results."
-        echo
-        echo "You must supply an option to execute sshlog."
-        echo
+#!/usr/bin/env bash
+#
+# sshlog - SSH log analysis tool
+# Rewritten to adhere to portable shell scripting standards.
+
+# Exit immediately on uninitialized variables or errors in pipelines
+set -uo pipefail
+
+# Initialize variables
+filter_accepted=0
+filter_failed=0
+filter_method=""
+output_to_file=0
+
+print_usage() {
+    cat <<EOF
+Usage: $(basename "$0") [-a] [-f] [-m method] [-o]
+  -a         Show only accepted logins
+  -f         Show only failed logins
+  -m method  Filter by authentication method (e.g., password, publickey)
+  -o         Save output to ~/ssh-logs in a timestamped file
+  -h         Show this help menu
+EOF
+}
+
+# Parse command line arguments using standard getopts
+while getopts "afm:oh" opt; do
+    case "${opt}" in
+        a) filter_accepted=1 ;;
+        f) filter_failed=1 ;;
+        m) filter_method="${OPTARG}" ;;
+        o) output_to_file=1 ;;
+        h) print_usage; exit 0 ;;
+        *) print_usage >&2; exit 1 ;;
+    esac
+done
+
+# Shift away parsed arguments
+shift "$((OPTIND - 1))"
+
+# Handle file output redirection
+if [ "$output_to_file" -eq 1 ]; then
+    log_dir="${HOME}/ssh-logs"
+    
+    # Safely create directory
+    if ! mkdir -p "$log_dir"; then
+        echo "Error: Could not create directory ${log_dir}" >&2
         exit 1
-    }
-    # Force-set 'AUTH_LOG', if unset.
-    if [ ! $AUTH_LOG ]; then
-        AUTH_LOG=/var/log/auth.log;
     fi
-    # `Getopts` loop -> get options from command line
-    while getopts "afpktoshv\?" opt; do
-        case "${opt}" in
-            a)
-                FILTER="Accepted"
-                MSG="accepted login(s) "
-                EXT_MSG="this week"
-                ;;
-            f)
-                FILTER="Failed"
-                MSG="failed login attempt(s) "
-                EXT_MSG="this week"
-                ;;
-            p)
-                FILTERWORD=" password"
-                MSG=" password login(s)"
-                ;;
-            k)
-                FILTERWORD=" publickey"
-                MSG=" publickey login(s)"
-                ;;
-            t)
-                TEXT=true
-                ;;
-            o)
-                AUTH_LOG="/var/log/auth.log.1"
-                EXT_MSG="last week"
-                ;;
-            s)
-                SFTP=true
-                ;;
-            h)
-                infobanner
-                ;;
-            v)
-                infobanner
-                ;;
-            \?)
-                infobanner
-                ;;
-            *)
-                opts
-                infobanner
-                ;;
-        esac
-    done
-    shift $((OPTIND -1))
-    if [ ! -z "${FILTER}" ]; then
-        sshlog_parser
-    else
-       opts
-       infobanner
-       exit 1
-    fi
-else
-    echo;
-    echo "You need root/sudo to execute sshlog properly!";
-    echo;
-    exit 1;
+    
+    timestamp=$(date "+%Y%m%d_%H%M%S")
+    out_path="${log_dir}/sshlog_${timestamp}.txt"
+    
+    echo "Output being saved to: ${out_path}" >&2
+    
+    # Redirect all future standard output (stdout) to this file
+    exec > "$out_path"
 fi
 
+# Function to read all log files and stream their content
+stream_logs() {
+    # Loop through all files matching the pattern
+    for file in /var/log/auth.log*; do
+        # Check if the file actually exists (handles the case where no files match)
+        [ -e "$file" ] || continue
+        
+        # Print the current file being processed to stderr (so it bypasses file output)
+        if [ "$output_to_file" -eq 1 ]; then
+            echo "Processing: $file" >&2
+        fi
+
+        # Use gzip -dc for portable decompression across Linux/macOS/BSD
+        case "$file" in
+            *.gz) gzip -dc "$file" 2>/dev/null || true ;;
+            *)    cat "$file" 2>/dev/null || true ;;
+        esac
+    done
+}
+
+# The awk script performs all filtering in a single, highly efficient process.
+# Using 'index()' instead of regex matching for the method prevents issues 
+# if the user supplies a method containing special characters.
+awk_filter='
+/sshd/ {
+    match_line = 1
+    
+    if (filter_accepted == 1 && !/Accepted/) match_line = 0
+    if (filter_failed == 1 && !/Failed/) match_line = 0
+    if (filter_method != "" && index($0, filter_method) == 0) match_line = 0
+    
+    if (match_line == 1) {
+        print $0
+    }
+}
+'
+
+# Execute the pipeline
+stream_logs | awk -v filter_accepted="$filter_accepted" \
+                  -v filter_failed="$filter_failed" \
+                  -v filter_method="$filter_method" \
+                  "$awk_filter"
