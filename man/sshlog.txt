@@ -19,19 +19,15 @@ Options:
 
 -f		displays failed SSH access attempts.
 
--t		pipes results to textfile in home-directory and exits.
+-0		saves results to textfile in home-directory `~/ssh-logs`.
 
 -v		prints detailed version information.
 
 Arguments:
 
-key		filter logins by publickey authentication.
+publickey		filter logins by publickey authentication.
 
-pass		filter logins by password authentication.
-
-sftp		display sftp request(s).
-
-old		display results from 7 days ago.
+password		filter logins by password authentication.
 
 EXAMPLEMARK
 
