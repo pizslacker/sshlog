@@ -21,7 +21,7 @@ Although originally written for bigrig- / server-use, it has proven to be quite 
 
 I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu / Debian).
 
-But have since refactored it to portable shell script to work on any unices: Linux, MaOS, BSD.
+But have since refactored it to portable shell script to work on any unices: Linux, MacOS, BSD.
 
 installing
 =======
