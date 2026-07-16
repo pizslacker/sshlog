@@ -1,15 +1,15 @@
 ## You need to install **cargo** (Rust build tool) to compile.
 
 ```bash
-$ sudo apt-get install cargo_
+$ sudo apt-get install cargo
 ```
 
 ### Then use make to build:
 ```bash
-$ make_
+$ make
 ```
 
 ### Cleanup:
 ```bash
-$ make clean_
+$ make clean
 ```
