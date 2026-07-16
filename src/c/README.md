@@ -1,4 +1,4 @@
-`sshlog` in C
+# `sshlog` in C
 
 `C99` and `POSIX` compliant C implementation.
 
