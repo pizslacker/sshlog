@@ -1,17 +1,19 @@
-## You need to install **cargo** (Rust build tool) to compile.
+## Compiling
+
+You need to install **cargo** (Rust build tool) to compile.
 
 ```bash
 $ sudo apt-get install cargo
 ```
 
-### Then use make to build:
+#### Then use make to build:
 ```bash
 $ make
 ```
 
 The resulting binary can be found in `target/release`.
 
-### Cleanup:
+#### Cleanup:
 ```bash
 $ make clean
 ```
