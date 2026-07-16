@@ -5,7 +5,7 @@
 $ make_
 ```
 
-### Cleanup
+### Cleanup:
 ```bash
 $ make clean_
 ```
