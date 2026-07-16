@@ -1,3 +1,7 @@
+# `sshlog` in Rust
+
+Rust `2021` Edition
+
 ## Compiling
 
 You need to install **cargo** (Rust build tool) to compile.
