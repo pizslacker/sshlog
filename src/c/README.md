@@ -4,3 +4,8 @@
 ```bash
 $ make_
 ```
+
+### Cleanup
+```bash
+$ make clean_
+```
