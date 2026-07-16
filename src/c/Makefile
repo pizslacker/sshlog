@@ -1,5 +1,5 @@
 sshlog: sshlog.c
-	gcc -O2 -o sshlog sshlog.c
+	gcc -Wall -O2 -o sshlog sshlog.c
 	strip sshlog
 
 clean:
