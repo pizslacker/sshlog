@@ -5,7 +5,7 @@ sshlog v2.0
 
 It was prototyped to be useful on small computer-terminals and mobile devices, like Android smart-phones / -tablets / -netbooks.
 
-It comes in various versions: Bash, C, Python, Rust.
+It comes in various versions: Bash, C, Python, Rust (located under: `src/`).
 
 what does sshlog do?
 ======
