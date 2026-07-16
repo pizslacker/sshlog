@@ -1,5 +1,7 @@
 # `sshlog` in Python
 
+`Python 3.6+` and relies strictly on the **Python Standard Library**.
+
 ## Usage:
 
 Make executable: `chown +x sshlog.py`
