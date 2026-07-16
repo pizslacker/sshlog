@@ -19,7 +19,9 @@ Although originally written for bigrig- / server-use, it has proven to be quite 
 
 <img src="https://lh3.googleusercontent.com/pw/AL9nZEUQZQKYLv0uthTG3sHWerm7N-o4E7YL5y5mI6t7OmhHbamAqnEs4oO64pzPHLOazSkh3K8I7jGoe8Y7VXyaVPTyGXQiIrFfCw8rqzNB1mQ9JMvvc4sAnE2raZceH5zZ2iCL_e2q8IB0E3uYCcLmMUBYzQ=w867-h632-no" width="500px" title="sshlog-viewer (gui) @PuTTY" />
 
-I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu Desktop and Linux Mint).
+I mainly made it to work on Ubuntu Server and certain derivatives  (Ubuntu / Debian).
+
+But have since refactored it to portable shell script to work on any unices: Linux, MaOS, BSD.
 
 installing
 =======
