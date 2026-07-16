@@ -2,3 +2,4 @@
 - C source code
 - Python script
 - Rust source code
+- Zig source code
