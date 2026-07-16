@@ -2,10 +2,10 @@
 
 ### Compile binary:
 ```bash
-$ make_
+$ make
 ```
 
 ### Cleanup:
 ```bash
-$ make clean_
+$ make clean
 ```
