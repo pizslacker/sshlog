@@ -9,7 +9,7 @@ It comes in various versions: Bash, C, Go, Python, Rust (located under: `src/`).
 
 what does sshlog do?
 ======
-**sshlog** generates a log of SSH connections made to a Linux system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory.
+**sshlog** generates a log of SSH connections made to a system, filters results based on command-line arguments provided and pipes the results to the screen, or, into a timestamped textfile in "~/ssh-logs" in your home-directory.
 
 It can filter log-results based on accepted/failed login(s), or by authentication-method(s) used by the remote connection (password / publickey / PAM).
 
