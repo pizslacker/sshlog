@@ -1,5 +1,5 @@
 sshlog: sshlog.cpp
-	g++ -std=c++17 -O3 -o sshlog sshlog.cpp
+	g++ -std=c++17 -Wall -Wextra -O3 -o sshlog sshlog.cpp
 	strip sshlog
 
 clean:
