@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <unistd.h>
 #include <pwd.h>
+#include <sys/ioctl.h>
+#include <termios.h>
 
 namespace fs = std::filesystem;
 
@@ -20,6 +22,73 @@ struct Config {
     bool failed = false;
     std::string method = "";
     bool output_to_file = false;
+};
+
+// Pager class encapsulates terminal pagination (like 'more' or 'less')
+class Pager {
+    int current_line = 0;
+    FILE* tty = nullptr;
+
+public:
+    explicit Pager(bool enable) {
+        if (enable) {
+            tty = fopen("/dev/tty", "r+");
+        }
+    }
+
+    ~Pager() {
+        if (tty) fclose(tty);
+    }
+
+    // Returns true to continue, false if the user pressed 'q'
+    bool paginate() {
+        if (!tty) return true; // Pagination disabled or not a TTY
+
+        int term_height = 24;
+        struct winsize w;
+        
+        // Dynamically fetch terminal height
+        if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0 && w.ws_row > 0) {
+            term_height = w.ws_row;
+        }
+
+        current_line++;
+        
+        if (current_line >= term_height - 1) {
+            std::cout << "\033[7m-- More -- (Press Space for next page, 'q' to quit)\033[0m" << std::flush;
+
+            struct termios old_t, new_t;
+            tcgetattr(fileno(tty), &old_t);
+            new_t = old_t;
+            
+            // Disable canonical mode (waiting for Enter) and echo
+            new_t.c_lflag &= ~(ICANON | ECHO); 
+            tcsetattr(fileno(tty), TCSANOW, &new_t);
+
+            int c;
+            bool continue_printing = true;
+            while (true) {
+                c = fgetc(tty);
+                if (c == 'q' || c == 'Q') {
+                    continue_printing = false;
+                    break;
+                }
+                if (c == ' ' || c == '\n' || c == '\r') {
+                    break;
+                }
+            }
+
+            // Restore terminal settings
+            tcsetattr(fileno(tty), TCSANOW, &old_t);
+            
+            // Clear the prompt line
+            std::cout << "\r\033[K" << std::flush;
+            current_line = 0;
+            
+            return continue_printing;
+        }
+        return true;
+    }
 };
 
 void print_usage(const std::string& prog_name) {
@@ -61,11 +130,11 @@ Config parse_args(int argc, char* argv[]) {
     return config;
 }
 
-void process_file(const fs::path& filepath, std::ostream& out, const Config& config) {
+// Returns true to continue processing files, false to abort entirely
+bool process_file(const fs::path& filepath, std::ostream& out, const Config& config, Pager& pager) {
     std::string path_str = filepath.string();
     bool is_gz = filepath.extension() == ".gz";
 
-    // Custom deleters for RAII so we never leak file handles
     auto close_file = [](FILE* f) { if (f) fclose(f); };
     auto close_pipe = [](FILE* f) { if (f) pclose(f); };
 
@@ -85,7 +154,7 @@ void process_file(const fs::path& filepath, std::ostream& out, const Config& con
 
     if (!in_fp) {
         std::cerr << "Warning: Could not open " << path_str << "\n";
-        return;
+        return true; // Return true to continue with the next file
     }
 
     char buffer[4096];
@@ -101,14 +170,17 @@ void process_file(const fs::path& filepath, std::ostream& out, const Config& con
 
         if (match) {
             out << line;
+            if (!pager.paginate()) {
+                return false; // User hit 'q', abort everything
+            }
         }
     }
+    return true;
 }
 
 int main(int argc, char* argv[]) {
     Config config = parse_args(argc, argv);
 
-    // Dynamic output stream pointer (defaults to standard output)
     std::ostream* out_stream = &std::cout;
     std::ofstream file_stream;
 
@@ -123,7 +195,6 @@ int main(int argc, char* argv[]) {
             fs::path log_dir = fs::path(homedir) / "ssh-logs";
             
             try {
-                // Equivalent to 'mkdir -p'
                 fs::create_directories(log_dir);
                 
                 auto now = std::chrono::system_clock::now();
@@ -152,12 +223,14 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // Instead of C's glob(), we use C++17 filesystem iteration
+    // Initialize the Pager. Only enable it if we are writing to an actual terminal window.
+    bool is_tty = !config.output_to_file && isatty(STDOUT_FILENO);
+    Pager pager(is_tty);
+
     std::vector<std::string> log_files;
     try {
         for (const auto& entry : fs::directory_iterator("/var/log")) {
             std::string filename = entry.path().filename().string();
-            // Check if the file starts with "auth.log"
             if (filename.find("auth.log") == 0) { 
                 log_files.push_back(entry.path().string());
             }
@@ -172,14 +245,17 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // Sort to ensure auth.log, auth.log.1, auth.log.2.gz are processed in a somewhat logical order
     std::sort(log_files.begin(), log_files.end());
 
     for (const auto& filepath : log_files) {
         if (config.output_to_file) {
             std::cout << "Processing: " << filepath << "\n";
         }
-        process_file(filepath, *out_stream, config);
+        
+        // If process_file returns false, the user pressed 'q'
+        if (!process_file(filepath, *out_stream, config, pager)) {
+            break;
+        }
     }
 
     return EXIT_SUCCESS;
