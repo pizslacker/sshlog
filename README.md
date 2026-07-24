@@ -1,4 +1,4 @@
-sshlog v2.0
+sshlog v2.1
 ===========
 
 **sshlog** is a server-side log processing tool to assemble ssh-connection logs, meant firstly for Linux-administrators / datacenter-operators with sufficient command-line interface (CLI) experience, or mostly anyone who can benefit from using it ;)
