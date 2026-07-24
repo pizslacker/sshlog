@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 #
 # sshlog - SSH log analysis tool
-# Rewritten to adhere to portable shell scripting standards.
+# Adheres to portable shell standards with native smart pagination.
 
-# Exit immediately on uninitialized variables or errors in pipelines
 set -uo pipefail
 
-# Initialize variables
 filter_accepted=0
 filter_failed=0
 filter_method=""
@@ -23,7 +21,6 @@ Usage: $(basename "$0") [-a] [-f] [-m method] [-o]
 EOF
 }
 
-# Parse command line arguments using standard getopts
 while getopts "afm:oh" opt; do
     case "${opt}" in
         a) filter_accepted=1 ;;
@@ -35,14 +32,12 @@ while getopts "afm:oh" opt; do
     esac
 done
 
-# Shift away parsed arguments
 shift "$((OPTIND - 1))"
 
 # Handle file output redirection
 if [ "$output_to_file" -eq 1 ]; then
     log_dir="${HOME}/ssh-logs"
     
-    # Safely create directory
     if ! mkdir -p "$log_dir"; then
         echo "Error: Could not create directory ${log_dir}" >&2
         exit 1
@@ -53,23 +48,19 @@ if [ "$output_to_file" -eq 1 ]; then
     
     echo "Output being saved to: ${out_path}" >&2
     
-    # Redirect all future standard output (stdout) to this file
+    # Redirect stdout for the remainder of the script
     exec > "$out_path"
 fi
 
-# Function to read all log files and stream their content
 stream_logs() {
-    # Loop through all files matching the pattern
     for file in /var/log/auth.log*; do
-        # Check if the file actually exists (handles the case where no files match)
         [ -e "$file" ] || continue
         
-        # Print the current file being processed to stderr (so it bypasses file output)
+        # Print to stderr so it bypasses file redirection and pagers
         if [ "$output_to_file" -eq 1 ]; then
             echo "Processing: $file" >&2
         fi
 
-        # Use gzip -dc for portable decompression across Linux/macOS/BSD
         case "$file" in
             *.gz) gzip -dc "$file" 2>/dev/null || true ;;
             *)    cat "$file" 2>/dev/null || true ;;
@@ -77,9 +68,6 @@ stream_logs() {
     done
 }
 
-# The awk script performs all filtering in a single, highly efficient process.
-# Using 'index()' instead of regex matching for the method prevents issues 
-# if the user supplies a method containing special characters.
 awk_filter='
 /sshd/ {
     match_line = 1
@@ -94,8 +82,17 @@ awk_filter='
 }
 '
 
-# Execute the pipeline
-stream_logs | awk -v filter_accepted="$filter_accepted" \
-                  -v filter_failed="$filter_failed" \
-                  -v filter_method="$filter_method" \
-                  "$awk_filter"
+# Execute the pipeline and conditionally paginate
+if [ "$output_to_file" -eq 0 ] && [ -t 1 ]; then
+    # Output is a terminal. Pipe through 'less' for pagination.
+    stream_logs | awk -v filter_accepted="$filter_accepted" \
+                      -v filter_failed="$filter_failed" \
+                      -v filter_method="$filter_method" \
+                      "$awk_filter" | less -FRX
+else
+    # Output is a file, or piped to another tool (like grep), skip pager
+    stream_logs | awk -v filter_accepted="$filter_accepted" \
+                      -v filter_failed="$filter_failed" \
+                      -v filter_method="$filter_method" \
+                      "$awk_filter"
+fi
