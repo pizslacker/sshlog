@@ -1,5 +1,5 @@
 # Find all subdirectories inside src/, excluding src/bash/
-SUBDIRS := $(filter-out src/bash/ src/zig/, $(wildcard src/*/))
+SUBDIRS := $(filter-out src/bash/ src/python src/zig/, $(wildcard src/*/))
 
 # Default target: build all subdirectories
 .PHONY: all $(SUBDIRS) clean
